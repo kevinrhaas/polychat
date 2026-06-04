@@ -145,24 +145,26 @@
     .tab.active { color: var(--text); }
     .tab-dot {
       width: 8px; height: 8px; border-radius: 50%;
-      flex-shrink: 0;
-      transition: width .15s, height .15s, background .15s, border .15s;
+      flex-shrink: 0; position: relative;
     }
-    .tab-dot.loading {
-      background: transparent !important;
-      width: 11px; height: 11px;
+    .tab-dot.loading::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
       border: 2px solid var(--dot-c, #888);
-      border-top-color: transparent !important;
-      animation: tab-spin .6s linear infinite;
-      margin: -1.5px;
+      border-top-color: transparent;
+      -webkit-animation: tab-spin .65s linear infinite;
+      animation: tab-spin .65s linear infinite;
     }
-    @keyframes tab-spin { to { transform: rotate(360deg); } }
-    .tab-dot.done { animation: pop .35s cubic-bezier(.36,.07,.19,.97); }
-    @keyframes pop {
-      0%   { transform: scale(1); }
-      40%  { transform: scale(1.6); }
-      100% { transform: scale(1); }
+    @-webkit-keyframes tab-spin { from { -webkit-transform: rotate(0deg); } to { -webkit-transform: rotate(360deg); } }
+    @keyframes tab-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .tab-dot.done {
+      -webkit-animation: pop .35s cubic-bezier(.36,.07,.19,.97);
+      animation: pop .35s cubic-bezier(.36,.07,.19,.97);
     }
+    @-webkit-keyframes pop { 0% { -webkit-transform: scale(1); } 40% { -webkit-transform: scale(1.6); } 100% { -webkit-transform: scale(1); } }
+    @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.6); } 100% { transform: scale(1); } }
 
     /* ── Conversation ───────────────────────────────────────────────── */
     .tab-panel { display: none; flex-direction: column; }
@@ -360,7 +362,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span> <span style="font-size:11px;font-weight:400;color:var(--text-3);letter-spacing:0">v2025-06-04</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span> <span style="font-size:11px;font-weight:400;color:var(--text-3);letter-spacing:0">v2026-06-04 15:45</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="themeBtn" title="Toggle theme">
       <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
