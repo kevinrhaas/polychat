@@ -145,16 +145,22 @@
     .tab.active { color: var(--text); }
     .tab-dot {
       width: 8px; height: 8px; border-radius: 50%;
-      transition: transform .2s;
+      flex-shrink: 0;
+      transition: width .15s, height .15s, background .15s, border .15s;
     }
-    .tab-dot.loading { animation: pulse-dot 1s ease-in-out infinite; }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: .4; transform: scale(.7); }
+    .tab-dot.loading {
+      background: transparent !important;
+      width: 11px; height: 11px;
+      border: 2px solid var(--dot-c, #888);
+      border-top-color: transparent !important;
+      animation: tab-spin .6s linear infinite;
+      margin: -1.5px;
     }
-    .tab-dot.done { animation: pop .3s ease-out; }
+    @keyframes tab-spin { to { transform: rotate(360deg); } }
+    .tab-dot.done { animation: pop .35s cubic-bezier(.36,.07,.19,.97); }
     @keyframes pop {
-      0% { transform: scale(1.4); }
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.6); }
       100% { transform: scale(1); }
     }
 
@@ -564,7 +570,7 @@ function ensureTabs() {
     btn.id = 'tab_' + id;
     btn.setAttribute('data-svc', id);
     btn.onclick = () => switchTab(id);
-    btn.innerHTML = `<span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color}"></span>${SVC[id].name}`;
+    btn.innerHTML = `<span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>${SVC[id].name}`;
     tabBar.appendChild(btn);
 
     // Panel
