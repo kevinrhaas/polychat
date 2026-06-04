@@ -354,7 +354,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span> <span style="font-size:11px;font-weight:400;color:var(--text-3);letter-spacing:0">v2025-06-04</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="themeBtn" title="Toggle theme">
       <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -441,9 +441,10 @@
         <div class="field">
           <label class="field-label" for="geminiModel">Model</label>
           <select class="field-input" id="geminiModel">
-            <option value="gemini-2.0-flash">Gemini 2.0 Flash (recommended)</option>
-            <option value="gemini-2.5-pro-preview-06-05">Gemini 2.5 Pro Preview</option>
-            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+            <option value="gemini-3.5-flash">Gemini 3.5 Flash (recommended)</option>
+            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
+            <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+            <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
           </select>
         </div>
       </div>
@@ -733,7 +734,7 @@ function geminiContents(messages) {
 }
 
 async function* apiGemini(messages, cfg) {
-  const model = cfg.geminiModel || 'gemini-2.0-flash';
+  const model = cfg.geminiModel || 'gemini-3.5-flash';
   const resp = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${cfg.gemini_key}&alt=sse`,
     {
@@ -895,7 +896,7 @@ function openConfig() {
   document.getElementById('geminiKey').value   = c.gemini_key  || '';
   document.getElementById('openaiKey').value   = c.openai_key  || '';
   document.getElementById('claudeModel').value = c.claudeModel || 'claude-sonnet-4-6';
-  document.getElementById('geminiModel').value = c.geminiModel || 'gemini-2.0-flash';
+  document.getElementById('geminiModel').value = c.geminiModel || 'gemini-3.5-flash';
   document.getElementById('openaiModel').value = c.openaiModel || 'gpt-4o';
   document.getElementById('configModal').classList.add('open');
 }
