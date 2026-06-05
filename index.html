@@ -338,7 +338,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 18:30</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 18:50</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -831,7 +831,7 @@ async function sendAll() {
       if (ok.length >= 2) {
         step1Started = true;
         const [f, s] = ok;
-        const p = `${SVC[s].name} provided the following response to the same question:\n\n${broadcastResults[s]}\n\nPlease review this response and incorporate any valuable additions, then make any corrections or adjustments to produce the best possible answer.`;
+        const p = `Here is an additional perspective on this question:\n\n---\n${broadcastResults[s]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.`;
         const msgs = [
           { role: 'user',      content: text },
           { role: 'assistant', content: broadcastResults[f] },
@@ -988,7 +988,7 @@ async function runConsensus(step1Promise = null) {
 
   const [first, second, third] = ordered;
 
-  const step1Prompt = `${SVC[second].name} provided the following response to the same question:\n\n${broadcastResults[second]}\n\nPlease review this response and incorporate any valuable additions, then make any corrections or adjustments to produce the best possible answer.`;
+  const step1Prompt = `Here is an additional perspective on this question:\n\n---\n${broadcastResults[second]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.`;
 
   const step1Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
@@ -1026,7 +1026,7 @@ async function runConsensus(step1Promise = null) {
   const step2Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
     { role: 'assistant', content: broadcastResults[third] },
-    { role: 'user',      content: `${SVC[first].name} and ${SVC[second].name} synthesized the following response:\n\n${synthesis}\n\nPlease review this synthesized response and incorporate any valuable additions or corrections from your own analysis to produce the definitive best possible final answer.` },
+    { role: 'user',      content: `Here is a well-researched draft answer to this question:\n\n---\n${synthesis}\n---\n\nUsing your own knowledge alongside this, provide the definitive best answer — complete, accurate, and well-organised.` },
   ];
 
   try {
