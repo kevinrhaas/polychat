@@ -338,7 +338,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 18:05</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 18:30</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -812,24 +812,46 @@ async function sendAll() {
   ensureTabs();
   initProgress(services);
 
-  // Mark all services as running
   services.forEach(id => setProgress(id, 'running'));
   setProgress('consensus', 'pending');
 
-  // Fire all services in parallel
+  // step1Promise fires as soon as 2 models complete (runs in parallel with 3rd)
+  let step1Started = false;
+  let step1Promise = null;
+
   await Promise.allSettled(services.map(async id => {
     const result = await streamTo(id, text);
     completionOrder.push(id);
     broadcastResults[id] = result;
     setProgress(id, result !== null ? 'done' : 'error');
+
+    // For 3-service runs: start the silent step-1 synthesis the moment 2 succeed
+    if (services.length >= 3 && !step1Started) {
+      const ok = completionOrder.filter(i => broadcastResults[i]);
+      if (ok.length >= 2) {
+        step1Started = true;
+        const [f, s] = ok;
+        const p = `${SVC[s].name} provided the following response to the same question:\n\n${broadcastResults[s]}\n\nPlease review this response and incorporate any valuable additions, then make any corrections or adjustments to produce the best possible answer.`;
+        const msgs = [
+          { role: 'user',      content: text },
+          { role: 'assistant', content: broadcastResults[f] },
+          { role: 'user',      content: p },
+        ];
+        setProgress('consensus', 'running', `${SVC[f].tabLabel} ↔ ${SVC[s].tabLabel}`);
+        setConsensusDot(true);
+        // Capture result; never throw — fall back to first model's raw response
+        step1Promise = getSilentText(f, msgs).catch(() => broadcastResults[f]);
+      }
+    }
   }));
 
-  // Consensus synthesis
-  setProgress('consensus', 'running');
-  setConsensusDot(true);
-  setConsensusStatus('Waiting for models…');
+  // If step1 wasn't started yet (2-model case or all failed), mark consensus running now
+  if (!step1Started) {
+    setProgress('consensus', 'running');
+    setConsensusDot(true);
+  }
 
-  await runConsensus();
+  await runConsensus(step1Promise);
 
   setConsensusDot(false);
   setProgress('consensus', 'done');
@@ -951,7 +973,7 @@ function showConsensusStatic(text, isError = false) {
 }
 
 // ── Consensus orchestration ───────────────────────────────────────────
-async function runConsensus() {
+async function runConsensus(step1Promise = null) {
   const ordered = completionOrder.filter(id => broadcastResults[id]);
 
   if (ordered.length === 0) {
@@ -976,9 +998,8 @@ async function runConsensus() {
 
   if (!third) {
     // ── 2-model: stream step 1 directly as final consensus ───────────
-    const synLabel2 = `${SVC[first].tabLabel} + ${SVC[second].tabLabel}`;
     setConsensusStatus(`${SVC[first].name} synthesizing…`);
-    setProgress('consensus', 'running', synLabel2);
+    setProgress('consensus', 'running', `${SVC[first].tabLabel} + ${SVC[second].tabLabel}`);
     try {
       await streamToConsensusTab(first, step1Messages);
     } catch {
@@ -987,18 +1008,20 @@ async function runConsensus() {
     return;
   }
 
-  // ── 3-model: silent step 1, then stream step 2 ───────────────────
-  const step1Label = `${SVC[first].tabLabel} ↔ ${SVC[second].tabLabel}`;
+  // ── 3-model: await already-running step1Promise (started in parallel) ─
   setConsensusStatus(`${SVC[first].name} reviewing ${SVC[second].name}…`);
-  setProgress('consensus', 'running', step1Label);
+  // (progress label was already set when step1 started — don't overwrite)
+
   let synthesis = broadcastResults[first];
   try {
-    synthesis = await getSilentText(first, step1Messages);
+    // step1Promise was fired when 2nd model finished; may already be resolved
+    synthesis = step1Promise
+      ? await step1Promise
+      : await getSilentText(first, step1Messages);
   } catch { /* use fallback */ }
 
-  const step2Label = `${SVC[third].tabLabel} finalizing`;
   setConsensusStatus(`${SVC[third].name} producing final consensus…`);
-  setProgress('consensus', 'running', step2Label);
+  setProgress('consensus', 'running', `${SVC[third].tabLabel} finalizing`);
 
   const step2Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
