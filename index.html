@@ -76,90 +76,6 @@
       padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
     }
 
-    /* ── Service / model selector pills ─────────────────────────────── */
-    .pill-row {
-      display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
-      scrollbar-width: none; padding: 2px 0; align-items: center;
-    }
-    .pill-row::-webkit-scrollbar { display: none; }
-
-    /* Base pill — service selector */
-    .s-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 8px; border-radius: 100px;
-      border: 1px solid rgba(128,128,128,.25);
-      background: rgba(128,128,128,.07);
-      cursor: pointer; white-space: nowrap; flex-shrink: 0;
-      position: relative; user-select: none;
-      transition: border-color .2s, background .2s, opacity .2s;
-    }
-    /* Colored border/bg from --c set inline */
-    .s-pill:not(.running):not(.done):not(.error) {
-      border-color: var(--pill-border, rgba(128,128,128,.25));
-      background: var(--pill-bg, rgba(128,128,128,.07));
-    }
-    .s-pill.running {
-      border-color: var(--c, #888);
-      background: var(--pill-bg, rgba(128,128,128,.1));
-    }
-    .s-pill.done   { opacity: .6; }
-    .s-pill.error  { --c: #f87171; }
-
-    .s-pill-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--c, currentColor); flex-shrink: 0; position: relative;
-    }
-    /* Spinner on dot when running */
-    .s-pill-dot.loading::after {
-      content: ''; position: absolute; inset: -4px; border-radius: 50%;
-      border: 2px solid var(--c, #888); border-top-color: transparent;
-      -webkit-animation: tab-spin .65s linear infinite;
-      animation: tab-spin .65s linear infinite;
-    }
-
-    .s-pill-body { display: flex; flex-direction: column; gap: 1px; line-height: 1; }
-    .s-pill-name  { font-size: 11px; font-weight: 700; color: var(--c, var(--text-2)); }
-    .s-pill-model { font-size: 9px; color: var(--text-3); margin-top: 1px; }
-    .s-pill-chevron { font-size: 8px; color: var(--text-3); line-height: 1; }
-
-    /* During broadcast: hide chevron, block select */
-    .s-pill.running .s-pill-chevron,
-    .s-pill.done    .s-pill-chevron,
-    .s-pill.error   .s-pill-chevron { display: none; }
-
-    /* Invisible select covers the whole pill — native picker on tap */
-    .s-pill-select {
-      position: absolute; inset: 0; opacity: 0;
-      width: 100%; height: 100%; cursor: pointer; border: none;
-    }
-    .s-pill.running .s-pill-select,
-    .s-pill.error   .s-pill-select { pointer-events: none; }
-
-    /* Consensus pill — not a selector, just a status indicator */
-    .c-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 8px; border-radius: 100px;
-      border: 1px solid rgba(147,51,234,.3); background: rgba(147,51,234,.08);
-      white-space: nowrap; flex-shrink: 0;
-      transition: border-color .2s, opacity .2s;
-    }
-    .c-pill.running { border-color: var(--consensus); }
-    .c-pill.done    { opacity: .6; }
-    .c-pill.error   { border-color: #f87171; }
-    .c-pill-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--consensus); flex-shrink: 0; position: relative;
-    }
-    .c-pill-dot.loading::after {
-      content: ''; position: absolute; inset: -4px; border-radius: 50%;
-      border: 2px solid var(--consensus); border-top-color: transparent;
-      -webkit-animation: tab-spin .65s linear infinite;
-      animation: tab-spin .65s linear infinite;
-    }
-    .c-pill-body  { display: flex; flex-direction: column; gap: 1px; line-height: 1; }
-    .c-pill-name  { font-size: 11px; font-weight: 700; color: var(--consensus); }
-    .c-pill-step  { font-size: 9px; color: var(--text-3); margin-top: 1px; min-height: 11px; }
-
     .no-config-hint { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
     .no-config-hint button {
       background: none; border: none; color: var(--gemini);
@@ -204,16 +120,19 @@
       border-bottom: 1px solid var(--border);
     }
     .tab-bar::-webkit-scrollbar { display: none; }
+
+    /* ── Tabs — two-line layout with embedded model selector ─────────── */
     .tab {
       display: flex; align-items: center; gap: 6px;
-      padding: 10px 14px; font-family: inherit; font-size: 12px; font-weight: 600;
-      background: none; border: none; border-bottom: 2px solid transparent;
+      padding: 8px 12px;
+      font-family: inherit; background: none; border: none;
+      border-bottom: 2px solid transparent;
       cursor: pointer; color: var(--text-2); white-space: nowrap; flex-shrink: 0;
       transition: color .15s, border-color .15s;
+      text-align: left;
     }
     .tab.active { color: var(--text); }
 
-    /* ── Tab dot / spinner ──────────────────────────────────────────── */
     .tab-dot {
       width: 7px; height: 7px; border-radius: 50%;
       flex-shrink: 0; position: relative;
@@ -233,13 +152,35 @@
     @-webkit-keyframes pop { 0% { -webkit-transform: scale(1); } 40% { -webkit-transform: scale(1.6); } 100% { -webkit-transform: scale(1); } }
     @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.6); } 100% { transform: scale(1); } }
 
+    /* Two-line tab label */
+    .tab-label { display: flex; flex-direction: column; gap: 2px; }
+    .tab-name  { font-size: 12px; font-weight: 600; line-height: 1; }
+
+    /* Model selector row inside tab */
+    .tab-model-wrap {
+      position: relative; display: inline-flex; align-items: center; gap: 2px;
+    }
+    .tab-model {
+      font-size: 9px; color: var(--text-3); line-height: 1;
+      pointer-events: none; /* clicks fall through to the select */
+    }
+    .tab-chevron { font-size: 7px; color: var(--text-3); pointer-events: none; }
+    /* Invisible select sits over the model name */
+    .tab-model-select {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; border: none; background: none;
+    }
+    /* Consensus step text — same slot, no select */
+    .tab-step { font-size: 9px; color: var(--text-3); line-height: 1; min-height: 10px; }
+
     /* ── Conversation ───────────────────────────────────────────────── */
     .tab-panel { display: none; flex-direction: column; }
     .tab-panel.active { display: flex; }
     .conversation {
       flex: 1; overflow-y: auto;
       padding: 16px; display: flex; flex-direction: column; gap: 0;
-      height: min(560px, calc(100vh - 340px)); min-height: 260px;
+      height: min(560px, calc(100vh - 320px)); min-height: 260px;
       scrollbar-width: thin; scrollbar-color: var(--border) transparent;
     }
     .conversation::-webkit-scrollbar { width: 4px; }
@@ -376,11 +317,11 @@
     @media (max-width: 600px) {
       .app { padding: 10px; gap: 10px; }
       header { padding: 10px 12px; }
-      .conversation { height: min(400px, calc(100vh - 300px)); }
+      .conversation { height: min(400px, calc(100vh - 290px)); }
       .msg-bubble { max-width: 98%; font-size: 13px; }
       .send-btn kbd { display: none; }
       .modal-body { padding: 14px; gap: 20px; }
-      .tab { padding: 9px 11px; font-size: 11px; gap: 5px; }
+      .tab { padding: 7px 10px; gap: 5px; }
     }
   </style>
 </head>
@@ -388,7 +329,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 20:00</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 20:30</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -412,10 +353,6 @@
 
 <!-- ── App ──────────────────────────────────────────────────────────── -->
 <div class="app">
-
-  <!-- Service / model selector pills — always visible -->
-  <div class="pill-row" id="pillRow"></div>
-
   <div class="prompt-card">
     <textarea class="prompt-input" id="promptInput"
       placeholder="Type your prompt — sent to all configured models simultaneously&#10;&#10;⌘↵ or Ctrl↵ to send"></textarea>
@@ -533,37 +470,35 @@ const SVC = {
   openai: { name: 'ChatGPT', tabLabel: 'GPT',   color: '#10a37f', openUrl: 'https://chatgpt.com/' },
 };
 
-// Model options per service
 const MODEL_OPTIONS = {
   claude: [
-    { value: 'claude-opus-4-8',           label: 'Opus 4.8'    },
-    { value: 'claude-sonnet-4-6',         label: 'Sonnet 4.6'  },
-    { value: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5'   },
-    { value: 'claude-opus-4-7',           label: 'Opus 4.7'    },
-    { value: 'claude-sonnet-4-5-20250929',label: 'Sonnet 4.5'  },
-    { value: 'claude-opus-4-1-20250805',  label: 'Opus 4.1'    },
+    { value: 'claude-opus-4-8',           label: 'Opus 4.8'   },
+    { value: 'claude-sonnet-4-6',         label: 'Sonnet 4.6' },
+    { value: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5'  },
+    { value: 'claude-opus-4-7',           label: 'Opus 4.7'   },
+    { value: 'claude-sonnet-4-5-20250929',label: 'Sonnet 4.5' },
+    { value: 'claude-opus-4-1-20250805',  label: 'Opus 4.1'   },
   ],
   gemini: [
-    { value: 'gemini-3.5-flash',          label: '3.5 Flash'   },
-    { value: 'gemini-3.1-pro-preview',    label: '3.1 Pro'     },
-    { value: 'gemini-3-flash-preview',    label: '3 Flash'     },
-    { value: 'gemini-3.1-flash-lite',     label: '3.1 Lite'    },
-    { value: 'gemini-2.5-pro',            label: '2.5 Pro'     },
-    { value: 'gemini-2.5-flash',          label: '2.5 Flash'   },
-    { value: 'gemini-2.5-flash-lite',     label: '2.5 Lite'    },
-    { value: 'gemini-2.0-flash',          label: '2.0 Flash'   },
-    { value: 'gemini-2.0-flash-lite',     label: '2.0 Lite'    },
+    { value: 'gemini-3.5-flash',          label: '3.5 Flash'  },
+    { value: 'gemini-3.1-pro-preview',    label: '3.1 Pro'    },
+    { value: 'gemini-3-flash-preview',    label: '3 Flash'    },
+    { value: 'gemini-3.1-flash-lite',     label: '3.1 Lite'   },
+    { value: 'gemini-2.5-pro',            label: '2.5 Pro'    },
+    { value: 'gemini-2.5-flash',          label: '2.5 Flash'  },
+    { value: 'gemini-2.5-flash-lite',     label: '2.5 Lite'   },
+    { value: 'gemini-2.0-flash',          label: '2.0 Flash'  },
+    { value: 'gemini-2.0-flash-lite',     label: '2.0 Lite'   },
   ],
   openai: [
-    { value: 'gpt-5.5',                   label: 'GPT-5.5'     },
-    { value: 'gpt-5.4',                   label: 'GPT-5.4'     },
-    { value: 'gpt-5.4-mini',              label: '5.4 mini'    },
-    { value: 'gpt-4o',                    label: 'GPT-4o'      },
-    { value: 'gpt-4o-mini',               label: '4o mini'     },
+    { value: 'gpt-5.5',                   label: 'GPT-5.5'    },
+    { value: 'gpt-5.4',                   label: 'GPT-5.4'    },
+    { value: 'gpt-5.4-mini',              label: '5.4 mini'   },
+    { value: 'gpt-4o',                    label: 'GPT-4o'     },
+    { value: 'gpt-4o-mini',              label: '4o mini'    },
   ],
 };
 
-// Short display name for any model value
 function modelShort(svcId, modelValue) {
   const opt = (MODEL_OPTIONS[svcId] || []).find(o => o.value === modelValue);
   return opt ? opt.label : modelValue;
@@ -574,13 +509,12 @@ function loadCfg() {
   try { return JSON.parse(localStorage.getItem('polychat_v2') || '{}'); } catch { return {}; }
 }
 function saveCfg(c) { localStorage.setItem('polychat_v2', JSON.stringify(c)); }
-
 function activeServices() {
   const c = loadCfg();
   return Object.keys(SVC).filter(id => c[id + '_key']);
 }
 
-// ── Conversation state ────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────
 const convos = { claude: [], gemini: [], openai: [] };
 let lastBroadcastPrompt = '';
 let broadcastResults   = {};
@@ -595,115 +529,14 @@ function toast(msg, dur = 2800) {
   _toastTimer = setTimeout(() => el.classList.remove('show'), dur);
 }
 
-// ── Service pill row ──────────────────────────────────────────────────
-function buildPillRow() {
-  const row    = document.getElementById('pillRow');
-  const active = activeServices();
-  const cfg    = loadCfg();
-
-  // Preserve consensus pill if already there
-  const cpill = document.getElementById('cpill_consensus');
-  row.innerHTML = '';
-
-  if (!active.length) {
-    row.innerHTML = `<span class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></span>`;
-    return;
-  }
-
-  active.forEach(id => {
-    const curModel  = cfg[id + 'Model'] || MODEL_OPTIONS[id][0].value;
-    const shortName = modelShort(id, curModel);
-    const opts      = MODEL_OPTIONS[id].map(o =>
-      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}</option>`
-    ).join('');
-
-    // Compute CSS vars as rgba since color-mix may not work everywhere
-    const hex   = SVC[id].color;
-    const pill  = document.createElement('label');
-    pill.className  = 's-pill';
-    pill.id         = 'spill_' + id;
-    pill.style.setProperty('--c', hex);
-    pill.style.setProperty('--pill-border', hex + '55');
-    pill.style.setProperty('--pill-bg',     hex + '14');
-    pill.innerHTML  = `
-      <span class="s-pill-dot" id="spdot_${id}"></span>
-      <div class="s-pill-body">
-        <span class="s-pill-name">${SVC[id].tabLabel}</span>
-        <span class="s-pill-model" id="spm_${id}">${shortName}</span>
-      </div>
-      <span class="s-pill-chevron">▾</span>
-      <select class="s-pill-select" onchange="onPillModelChange('${id}', this)">${opts}</select>`;
-    row.appendChild(pill);
-  });
-
-  if (cpill) row.appendChild(cpill);
-}
-
-function onPillModelChange(svcId, sel) {
-  const cfg = loadCfg();
-  cfg[svcId + 'Model'] = sel.value;
-  saveCfg(cfg);
-  // Update short label in pill
-  const el = document.getElementById('spm_' + svcId);
-  if (el) el.textContent = modelShort(svcId, sel.value);
-  // Keep config modal in sync
-  const ms = document.getElementById(svcId + 'Model');
-  if (ms) ms.value = sel.value;
-}
-
-// Progress states for service pills ('running' | 'done' | 'error' | '')
-function setSvcPillState(id, state) {
-  const pill = document.getElementById('spill_' + id);
-  if (!pill) return;
-  pill.classList.remove('running', 'done', 'error');
-  if (state) pill.classList.add(state);
-  const dot = document.getElementById('spdot_' + id);
-  if (dot) {
-    if (state === 'running') dot.classList.add('loading');
-    else dot.classList.remove('loading');
-  }
-}
-
-// Consensus pill — appended to pill row during broadcast
-function ensureConsensusPill() {
-  if (document.getElementById('cpill_consensus')) return;
-  const row = document.getElementById('pillRow');
-  const cp  = document.createElement('div');
-  cp.className = 'c-pill';
-  cp.id        = 'cpill_consensus';
-  cp.innerHTML = `
-    <span class="c-pill-dot" id="cpdot_consensus"></span>
-    <div class="c-pill-body">
-      <span class="c-pill-name">Consensus</span>
-      <span class="c-pill-step" id="cpstep_consensus"></span>
-    </div>`;
-  row.appendChild(cp);
-}
-
-function setConsensusPillState(state, stepLabel) {
-  const cp = document.getElementById('cpill_consensus');
-  if (!cp) return;
-  cp.classList.remove('running', 'done', 'error');
-  if (state) cp.classList.add(state);
-  const dot = document.getElementById('cpdot_consensus');
-  if (dot) {
-    if (state === 'running') dot.classList.add('loading');
-    else dot.classList.remove('loading');
-  }
-  const step = document.getElementById('cpstep_consensus');
-  if (step && stepLabel !== undefined) step.textContent = stepLabel;
-}
-
-// ── refreshStatus (called after config change / init) ─────────────────
+// ── Status ────────────────────────────────────────────────────────────
 function refreshStatus() {
   const active = activeServices();
   const btn    = document.getElementById('sendBtn');
   const tgt    = document.getElementById('promptTargets');
-
-  buildPillRow();
-
   if (!active.length) {
-    btn.disabled = true; tgt.textContent = '';
+    tgt.innerHTML = `<span class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></span>`;
+    btn.disabled = true;
     return;
   }
   btn.disabled = false;
@@ -717,13 +550,31 @@ function ensureTabs() {
   const services = activeServices();
   const tabBar   = document.getElementById('tabBar');
   const panels   = document.getElementById('tabPanels');
+  const cfg      = loadCfg();
 
   services.forEach(id => {
     if (document.getElementById('tab_' + id)) return;
+
+    const curModel = cfg[id + 'Model'] || MODEL_OPTIONS[id][0].value;
+    const opts = MODEL_OPTIONS[id].map(o =>
+      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}</option>`
+    ).join('');
+
     const btn = document.createElement('button');
     btn.className = 'tab'; btn.id = 'tab_' + id; btn.setAttribute('data-svc', id);
     btn.onclick = () => switchTab(id);
-    btn.innerHTML = `<span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>${SVC[id].tabLabel}`;
+    btn.innerHTML = `
+      <span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>
+      <div class="tab-label">
+        <span class="tab-name">${SVC[id].tabLabel}</span>
+        <div class="tab-model-wrap">
+          <span class="tab-model" id="tmodel_${id}">${modelShort(id, curModel)}</span>
+          <span class="tab-chevron">▾</span>
+          <select class="tab-model-select"
+                  onclick="event.stopPropagation()"
+                  onchange="onTabModelChange('${id}', this)">${opts}</select>
+        </div>
+      </div>`;
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
@@ -743,7 +594,12 @@ function ensureTabs() {
     const btn = document.createElement('button');
     btn.className = 'tab'; btn.id = 'tab_consensus'; btn.setAttribute('data-svc', 'consensus');
     btn.onclick = () => switchTab('consensus');
-    btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>Consensus`;
+    btn.innerHTML = `
+      <span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>
+      <div class="tab-label">
+        <span class="tab-name">Consensus</span>
+        <span class="tab-step" id="consensus-tab-step"></span>
+      </div>`;
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
@@ -759,6 +615,21 @@ function ensureTabs() {
   }
 
   if (!activeTab && services.length) switchTab(services[0]);
+}
+
+function onTabModelChange(svcId, sel) {
+  const cfg = loadCfg();
+  cfg[svcId + 'Model'] = sel.value;
+  saveCfg(cfg);
+  const el = document.getElementById('tmodel_' + svcId);
+  if (el) el.textContent = modelShort(svcId, sel.value);
+  const ms = document.getElementById(svcId + 'Model');
+  if (ms) ms.value = sel.value;
+}
+
+function setConsensusTabStep(label) {
+  const el = document.getElementById('consensus-tab-step');
+  if (el) el.textContent = label || '';
 }
 
 function switchTab(id) {
@@ -865,7 +736,7 @@ function makeGen(svcId, messages, cfg) {
 
 // ── Stream to service tab ─────────────────────────────────────────────
 async function streamTo(svcId, userContent) {
-  const cfg = loadCfg();
+  const cfg   = loadCfg();
   convos[svcId].push({ role: 'user', content: userContent });
 
   const conv  = document.getElementById('conv_' + svcId);
@@ -889,6 +760,12 @@ async function streamTo(svcId, userContent) {
   const dot = document.getElementById('tdot_' + svcId);
   if (dot) dot.classList.add('loading');
 
+  // Disable model selector during broadcast
+  const sel = document.querySelector(`#tab_${svcId} .tab-model-select`);
+  if (sel) sel.disabled = true;
+  const chev = document.querySelector(`#tab_${svcId} .tab-chevron`);
+  if (chev) chev.style.display = 'none';
+
   const bubble = document.getElementById('mbubble_' + svcId);
   let full = '';
 
@@ -909,6 +786,9 @@ async function streamTo(svcId, userContent) {
     return null;
   } finally {
     if (dot) { dot.classList.remove('loading'); dot.classList.add('done'); setTimeout(() => dot.classList.remove('done'), 350); }
+    // Re-enable model selector
+    if (sel) sel.disabled = false;
+    if (chev) chev.style.display = '';
   }
 }
 
@@ -929,17 +809,7 @@ async function sendAll() {
   document.getElementById('responses').style.display = '';
 
   ensureTabs();
-  ensureConsensusPill();
 
-  // Mark all service pills as running, disable selects
-  services.forEach(id => {
-    setSvcPillState(id, 'running');
-    const sel = document.querySelector(`#spill_${id} .s-pill-select`);
-    if (sel) sel.disabled = true;
-  });
-  setConsensusPillState('', '');
-
-  // step1Promise: fires as soon as 2 models finish (parallel with 3rd)
   let step1Started = false;
   let step1Promise = null;
 
@@ -947,9 +817,7 @@ async function sendAll() {
     const result = await streamTo(id, text);
     completionOrder.push(id);
     broadcastResults[id] = result;
-    setSvcPillState(id, result !== null ? 'done' : 'error');
 
-    // For 3-service runs: start silent step-1 as soon as 2 succeed
     if (services.length >= 3 && !step1Started) {
       const ok = completionOrder.filter(i => broadcastResults[i]);
       if (ok.length >= 2) {
@@ -960,7 +828,7 @@ async function sendAll() {
           { role: 'assistant', content: broadcastResults[f] },
           { role: 'user',      content: `Here is an additional perspective on this question:\n\n---\n${broadcastResults[s]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.` },
         ];
-        setConsensusPillState('running', `${SVC[f].tabLabel} ↔ ${SVC[s].tabLabel}`);
+        setConsensusTabStep(`${SVC[f].tabLabel} ↔ ${SVC[s].tabLabel}`);
         setConsensusDot(true);
         step1Promise = getSilentText(f, msgs).catch(() => broadcastResults[f]);
       }
@@ -968,25 +836,17 @@ async function sendAll() {
   }));
 
   if (!step1Started) {
-    setConsensusPillState('running', '');
     setConsensusDot(true);
   }
 
   await runConsensus(step1Promise);
 
   setConsensusDot(false);
-  setConsensusPillState('done', '');
-
-  // Re-enable model selectors
-  services.forEach(id => {
-    const sel = document.querySelector(`#spill_${id} .s-pill-select`);
-    if (sel) sel.disabled = false;
-  });
-
+  setConsensusTabStep('');
   document.getElementById('sendBtn').disabled = false;
 }
 
-// ── Reset / New chat ──────────────────────────────────────────────────
+// ── Reset ─────────────────────────────────────────────────────────────
 function resetApp() {
   Object.keys(convos).forEach(id => convos[id] = []);
   lastBroadcastPrompt = '';
@@ -1004,19 +864,12 @@ function resetApp() {
     conv.innerHTML = `<div class="empty-state" id="empty_${svcId}">${icon}<div id="${svcId === 'consensus' ? 'consensus-status' : ''}">${label}</div></div>`;
   });
 
-  // Reset tab dots
   document.querySelectorAll('.tab-dot').forEach(d => d.classList.remove('loading', 'done'));
+  setConsensusTabStep('');
 
-  // Reset service pill states and re-enable selects
-  Object.keys(SVC).forEach(id => {
-    setSvcPillState(id, '');
-    const sel = document.querySelector(`#spill_${id} .s-pill-select`);
-    if (sel) sel.disabled = false;
-  });
-
-  // Remove consensus pill
-  const cp = document.getElementById('cpill_consensus');
-  if (cp) cp.remove();
+  // Re-enable all model selects and chevrons
+  document.querySelectorAll('.tab-model-select').forEach(s => s.disabled = false);
+  document.querySelectorAll('.tab-chevron').forEach(c => c.style.display = '');
 
   document.getElementById('promptInput').focus();
 }
@@ -1042,8 +895,8 @@ async function getSilentText(svcId, messages) {
 }
 
 async function streamToConsensusTab(svcId, messages) {
-  const cfg  = loadCfg();
-  const conv = document.getElementById('conv_consensus');
+  const cfg   = loadCfg();
+  const conv  = document.getElementById('conv_consensus');
   const empty = document.getElementById('empty_consensus');
   if (empty) empty.remove();
 
@@ -1110,24 +963,22 @@ async function runConsensus(step1Promise = null) {
   ];
 
   if (!third) {
-    setConsensusStatus(`Synthesizing…`);
-    setConsensusPillState('running', `${SVC[first].tabLabel} + ${SVC[second].tabLabel}`);
+    setConsensusStatus('Synthesizing…');
+    setConsensusTabStep(`${SVC[first].tabLabel} + ${SVC[second].tabLabel}`);
     try { await streamToConsensusTab(first, step1Messages); }
     catch { showConsensusStatic(broadcastResults[first]); }
     return;
   }
 
-  // 3-model: step1 already running in parallel — just await it
-  setConsensusStatus(`Reviewing perspectives…`);
+  setConsensusStatus('Reviewing perspectives…');
+
   let synthesis = broadcastResults[first];
   try {
-    synthesis = step1Promise
-      ? await step1Promise
-      : await getSilentText(first, step1Messages);
+    synthesis = step1Promise ? await step1Promise : await getSilentText(first, step1Messages);
   } catch { /* use fallback */ }
 
-  setConsensusStatus(`Finalizing consensus…`);
-  setConsensusPillState('running', `${SVC[third].tabLabel} finalizing`);
+  setConsensusStatus('Finalizing consensus…');
+  setConsensusTabStep(`${SVC[third].tabLabel} finalizing`);
 
   const step2Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
@@ -1185,6 +1036,13 @@ document.getElementById('saveConfig').addEventListener('click', () => {
   };
   Object.keys(c).forEach(k => { if (!c[k]) delete c[k]; });
   saveCfg(c); closeConfig(); refreshStatus(); toast('Configuration saved');
+  // Sync tab model labels
+  activeServices().forEach(id => {
+    const el = document.getElementById('tmodel_' + id);
+    if (el) el.textContent = modelShort(id, c[id + 'Model'] || MODEL_OPTIONS[id][0].value);
+    const ts = document.querySelector(`#tab_${id} .tab-model-select`);
+    if (ts) ts.value = c[id + 'Model'] || MODEL_OPTIONS[id][0].value;
+  });
 });
 
 document.getElementById('clearConfig').addEventListener('click', () => {
