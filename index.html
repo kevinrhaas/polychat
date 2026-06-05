@@ -78,13 +78,6 @@
     }
 
     /* ── Service status ─────────────────────────────────────────────── */
-    .status-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-    .status-chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 9px; border-radius: 100px; border: 1px solid;
-      font-size: 11px; font-weight: 500;
-    }
-    .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
     .no-config-hint { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
     .no-config-hint button {
       background: none; border: none; color: var(--gemini);
@@ -99,10 +92,10 @@
     .prompt-card:focus-within { border-color: var(--text-3); }
     .prompt-input {
       width: 100%; background: none; border: none;
-      color: var(--text); font-family: inherit; font-size: 15px; line-height: 1.65;
-      padding: 14px; resize: none; min-height: 100px; outline: none;
+      color: var(--text); font-family: inherit; font-size: 14px; line-height: 1.6;
+      padding: 14px; resize: none; min-height: 90px; outline: none;
     }
-    .prompt-input::placeholder { color: var(--text-3); }
+    .prompt-input::placeholder { color: var(--text-3); font-size: 13px; }
     .prompt-footer {
       display: flex; align-items: center; justify-content: space-between;
       padding: 8px 12px; border-top: 1px solid var(--border); gap: 10px;
@@ -345,7 +338,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 17:10</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 17:45</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -369,8 +362,6 @@
 
 <!-- ── App ──────────────────────────────────────────────────────────── -->
 <div class="app">
-  <div class="status-row" id="statusRow"></div>
-
   <div class="prompt-card">
     <textarea class="prompt-input" id="promptInput"
       placeholder="Type your prompt — sent to all configured models simultaneously&#10;&#10;⌘↵ or Ctrl↵ to send"></textarea>
@@ -515,19 +506,14 @@ function toast(msg, dur = 2800) {
 // ── Status row ────────────────────────────────────────────────────────
 function refreshStatus() {
   const active = activeServices();
-  const row    = document.getElementById('statusRow');
   const btn    = document.getElementById('sendBtn');
   const tgt    = document.getElementById('promptTargets');
 
   if (!active.length) {
-    row.innerHTML = `<div class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></div>`;
-    btn.disabled = true; tgt.textContent = '';
+    tgt.innerHTML = `<span class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></span>`;
+    btn.disabled = true;
     return;
   }
-  row.innerHTML = active.map(id =>
-    `<span class="status-chip" style="color:${SVC[id].color};border-color:${SVC[id].color}40">
-      <span class="chip-dot"></span>${SVC[id].name}
-    </span>`).join('');
   btn.disabled = false;
   tgt.textContent = `→ ${active.map(id => SVC[id].name).join(' · ')}`;
 }
@@ -610,8 +596,7 @@ function ensureTabs() {
     btn.id = 'tab_consensus';
     btn.setAttribute('data-svc', 'consensus');
     btn.onclick = () => switchTab('consensus');
-    btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>✦`;
-    btn.title = 'Consensus';
+    btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>Consensus`;
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
@@ -913,12 +898,18 @@ async function streamToConsensusTab(svcId, messages) {
   const conv = document.getElementById('conv_consensus');
   conv.innerHTML = '';
 
+  const safe = lastBroadcastPrompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   const pair = document.createElement('div');
   pair.className = 'qa-pair';
-  pair.innerHTML = `<div class="msg assistant">
-    <span class="msg-label">Consensus</span>
-    <div class="msg-bubble" id="consensus-bubble"></div>
-  </div>`;
+  pair.innerHTML = `
+    <div class="msg user">
+      <span class="msg-label">You</span>
+      <div class="msg-bubble">${safe}</div>
+    </div>
+    <div class="msg assistant">
+      <span class="msg-label">Consensus</span>
+      <div class="msg-bubble" id="consensus-bubble"></div>
+    </div>`;
   conv.appendChild(pair);
   const bubble = document.getElementById('consensus-bubble');
 
@@ -938,11 +929,18 @@ async function streamToConsensusTab(svcId, messages) {
 function showConsensusStatic(text, isError = false) {
   const conv = document.getElementById('conv_consensus');
   conv.innerHTML = '';
+  const safe = lastBroadcastPrompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   const pair = document.createElement('div');
   pair.className = 'qa-pair';
-  pair.innerHTML = isError
-    ? `<div class="msg assistant"><span class="msg-label">Consensus</span><div class="msg-bubble"><span class="msg-error">${text}</span></div></div>`
-    : `<div class="msg assistant"><span class="msg-label">Consensus</span><div class="msg-bubble">${renderMarkdown(text)}</div></div>`;
+  pair.innerHTML = `
+    <div class="msg user">
+      <span class="msg-label">You</span>
+      <div class="msg-bubble">${safe}</div>
+    </div>
+    <div class="msg assistant">
+      <span class="msg-label">Consensus</span>
+      <div class="msg-bubble">${isError ? `<span class="msg-error">${text}</span>` : renderMarkdown(text)}</div>
+    </div>`;
   conv.appendChild(pair);
   if (!isError) highlightBubble(pair);
 }
