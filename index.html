@@ -338,7 +338,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 17:45</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 18:05</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -896,7 +896,8 @@ async function getSilentText(svcId, messages) {
 async function streamToConsensusTab(svcId, messages) {
   const cfg  = loadCfg();
   const conv = document.getElementById('conv_consensus');
-  conv.innerHTML = '';
+  const empty = document.getElementById('empty_consensus');
+  if (empty) empty.remove();
 
   const safe = lastBroadcastPrompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   const pair = document.createElement('div');
@@ -910,7 +911,8 @@ async function streamToConsensusTab(svcId, messages) {
       <span class="msg-label">Consensus</span>
       <div class="msg-bubble" id="consensus-bubble"></div>
     </div>`;
-  conv.appendChild(pair);
+  conv.prepend(pair);
+  conv.scrollTop = 0;
   const bubble = document.getElementById('consensus-bubble');
 
   let fullText = '';
@@ -927,8 +929,10 @@ async function streamToConsensusTab(svcId, messages) {
 
 // Show a static result in Consensus tab (no streaming)
 function showConsensusStatic(text, isError = false) {
-  const conv = document.getElementById('conv_consensus');
-  conv.innerHTML = '';
+  const conv  = document.getElementById('conv_consensus');
+  const empty = document.getElementById('empty_consensus');
+  if (empty) empty.remove();
+
   const safe = lastBroadcastPrompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   const pair = document.createElement('div');
   pair.className = 'qa-pair';
@@ -941,7 +945,8 @@ function showConsensusStatic(text, isError = false) {
       <span class="msg-label">Consensus</span>
       <div class="msg-bubble">${isError ? `<span class="msg-error">${text}</span>` : renderMarkdown(text)}</div>
     </div>`;
-  conv.appendChild(pair);
+  conv.prepend(pair);
+  conv.scrollTop = 0;
   if (!isError) highlightBubble(pair);
 }
 
