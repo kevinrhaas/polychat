@@ -78,15 +78,15 @@
 
     /* ── Service / model selector pills ─────────────────────────────── */
     .pill-row {
-      display: flex; gap: 7px; flex-wrap: nowrap; overflow-x: auto;
+      display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
       scrollbar-width: none; padding: 2px 0; align-items: center;
     }
     .pill-row::-webkit-scrollbar { display: none; }
 
     /* Base pill — service selector */
     .s-pill {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 6px 11px; border-radius: 100px;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 8px; border-radius: 100px;
       border: 1px solid rgba(128,128,128,.25);
       background: rgba(128,128,128,.07);
       cursor: pointer; white-space: nowrap; flex-shrink: 0;
@@ -118,9 +118,9 @@
     }
 
     .s-pill-body { display: flex; flex-direction: column; gap: 1px; line-height: 1; }
-    .s-pill-name  { font-size: 12px; font-weight: 700; color: var(--c, var(--text-2)); }
-    .s-pill-model { font-size: 10px; color: var(--text-3); margin-top: 2px; }
-    .s-pill-chevron { font-size: 9px; color: var(--text-3); line-height: 1; }
+    .s-pill-name  { font-size: 11px; font-weight: 700; color: var(--c, var(--text-2)); }
+    .s-pill-model { font-size: 9px; color: var(--text-3); margin-top: 1px; }
+    .s-pill-chevron { font-size: 8px; color: var(--text-3); line-height: 1; }
 
     /* During broadcast: hide chevron, block select */
     .s-pill.running .s-pill-chevron,
@@ -137,8 +137,8 @@
 
     /* Consensus pill — not a selector, just a status indicator */
     .c-pill {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 6px 11px; border-radius: 100px;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 8px; border-radius: 100px;
       border: 1px solid rgba(147,51,234,.3); background: rgba(147,51,234,.08);
       white-space: nowrap; flex-shrink: 0;
       transition: border-color .2s, opacity .2s;
@@ -157,8 +157,8 @@
       animation: tab-spin .65s linear infinite;
     }
     .c-pill-body  { display: flex; flex-direction: column; gap: 1px; line-height: 1; }
-    .c-pill-name  { font-size: 12px; font-weight: 700; color: var(--consensus); }
-    .c-pill-step  { font-size: 10px; color: var(--text-3); margin-top: 2px; min-height: 12px; }
+    .c-pill-name  { font-size: 11px; font-weight: 700; color: var(--consensus); }
+    .c-pill-step  { font-size: 9px; color: var(--text-3); margin-top: 1px; min-height: 11px; }
 
     .no-config-hint { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
     .no-config-hint button {
@@ -388,7 +388,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 19:15</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 19:35</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -610,7 +610,7 @@ function buildPillRow() {
     pill.innerHTML  = `
       <span class="s-pill-dot" id="spdot_${id}"></span>
       <div class="s-pill-body">
-        <span class="s-pill-name">${SVC[id].name}</span>
+        <span class="s-pill-name">${SVC[id].tabLabel}</span>
         <span class="s-pill-model" id="spm_${id}">${shortName}</span>
       </div>
       <span class="s-pill-chevron">▾</span>
