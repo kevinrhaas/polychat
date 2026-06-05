@@ -103,7 +103,7 @@
 
     .m-chip {
       display: inline-flex; align-items: center; gap: 4px;
-      padding: 4px 8px; border-radius: 100px;
+      padding: 3px 7px; border-radius: 100px;
       border: 1px solid var(--border);
       font-size: 11px; white-space: nowrap; cursor: pointer;
       color: var(--text-2); flex-shrink: 0; position: relative;
@@ -127,10 +127,10 @@
     }
 
     .send-btn {
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 5px;
       background: var(--text); color: var(--bg); border: none;
-      border-radius: var(--radius-sm); padding: 8px 16px;
-      font-family: inherit; font-size: 13px; font-weight: 700;
+      border-radius: var(--radius-sm); padding: 7px 12px;
+      font-family: inherit; font-size: 12px; font-weight: 700;
       cursor: pointer; transition: opacity .15s; white-space: nowrap; flex-shrink: 0;
     }
     .send-btn:hover { opacity: .82; }
@@ -179,9 +179,10 @@
     @-webkit-keyframes pop { 0% { -webkit-transform: scale(1); } 40% { -webkit-transform: scale(1.6); } 100% { -webkit-transform: scale(1); } }
     @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.6); } 100% { transform: scale(1); } }
 
-    /* Consensus step text under the tab name */
-    .tab-step { font-size: 9px; color: var(--text-3); display: block; line-height: 1; margin-top: 1px; min-height: 10px; }
-    .tab-inner { display: flex; flex-direction: column; gap: 0; }
+    /* Consensus step text — only takes space when non-empty */
+    .tab-step { font-size: 9px; color: var(--text-3); display: block; line-height: 1; margin-top: 2px; }
+    .tab-step:empty { display: none; }
+    .tab-inner { display: flex; flex-direction: column; justify-content: center; }
 
     /* ── Conversation ───────────────────────────────────────────────── */
     .tab-panel { display: none; flex-direction: column; }
@@ -337,7 +338,7 @@
 <body>
 
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 21:00</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 21:20</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
