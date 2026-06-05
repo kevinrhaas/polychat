@@ -17,10 +17,10 @@
       --text:      #e8e8f2;
       --text-2:    #8888aa;
       --text-3:    #4a4a6a;
-      --claude:     #d4773b;
-      --gemini:     #4285f4;
-      --openai:     #10a37f;
-      --consensus:  #9333ea;
+      --claude:    #d4773b;
+      --gemini:    #4285f4;
+      --openai:    #10a37f;
+      --consensus: #9333ea;
       --radius:    12px;
       --radius-sm: 8px;
     }
@@ -40,54 +40,52 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      transition: background .2s, color .2s;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; transition: background .2s, color .2s;
     }
 
     /* ── Header ─────────────────────────────────────────────────────── */
     header {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
+      padding: 12px 16px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px); gap: 8px;
     }
-    .logo { font-size: 17px; font-weight: 700; letter-spacing: -.4px; }
+    .logo { font-size: 16px; font-weight: 700; letter-spacing: -.4px; white-space: nowrap; }
     .logo-grad {
       background: linear-gradient(120deg, var(--claude) 0%, var(--gemini) 50%, var(--openai) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .header-actions { display: flex; gap: 8px; }
+    .logo-ver { font-size: 10px; font-weight: 400; color: var(--text-3); letter-spacing: 0; margin-left: 4px; }
+    .header-actions { display: flex; gap: 6px; align-items: center; }
+
     .icon-btn {
-      width: 34px; height: 34px;
-      display: flex; align-items: center; justify-content: center;
+      height: 32px; min-width: 32px;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
       background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
       color: var(--text-2); cursor: pointer; transition: all .15s;
+      font-family: inherit; font-size: 12px; font-weight: 600; padding: 0 10px;
     }
     .icon-btn:hover { background: var(--surface-2); color: var(--text); }
-    .icon-btn svg { pointer-events: none; }
+    .icon-btn svg { pointer-events: none; flex-shrink: 0; }
+    .icon-btn.icon-only { padding: 0; width: 32px; }
 
     /* ── App shell ──────────────────────────────────────────────────── */
     .app {
       max-width: 1100px; margin: 0 auto;
-      padding: 20px; display: flex; flex-direction: column; gap: 16px;
+      padding: 16px; display: flex; flex-direction: column; gap: 12px;
     }
 
     /* ── Service status ─────────────────────────────────────────────── */
-    .status-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .status-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
     .status-chip {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 100px; border: 1px solid;
-      font-size: 12px; font-weight: 500;
+      padding: 3px 9px; border-radius: 100px; border: 1px solid;
+      font-size: 11px; font-weight: 500;
     }
-    .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-    .no-config-hint {
-      font-size: 13px; color: var(--text-3);
-      display: flex; align-items: center; gap: 6px;
-    }
+    .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .no-config-hint { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
     .no-config-hint button {
       background: none; border: none; color: var(--gemini);
       font-size: 13px; cursor: pointer; padding: 0; text-decoration: underline;
@@ -96,34 +94,58 @@
     /* ── Prompt area ────────────────────────────────────────────────── */
     .prompt-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-      transition: border-color .15s;
+      border-radius: var(--radius); overflow: hidden; transition: border-color .15s;
     }
     .prompt-card:focus-within { border-color: var(--text-3); }
     .prompt-input {
       width: 100%; background: none; border: none;
       color: var(--text); font-family: inherit; font-size: 15px; line-height: 1.65;
-      padding: 16px; resize: none; min-height: 110px; outline: none;
+      padding: 14px; resize: none; min-height: 100px; outline: none;
     }
     .prompt-input::placeholder { color: var(--text-3); }
     .prompt-footer {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; border-top: 1px solid var(--border);
-      gap: 12px;
+      padding: 8px 12px; border-top: 1px solid var(--border); gap: 10px;
     }
-    .prompt-targets { font-size: 12px; color: var(--text-3); flex: 1; }
+    .prompt-targets { font-size: 11px; color: var(--text-3); flex: 1; }
     .send-btn {
-      display: flex; align-items: center; gap: 7px;
+      display: flex; align-items: center; gap: 6px;
       background: var(--text); color: var(--bg); border: none;
-      border-radius: var(--radius-sm); padding: 9px 18px;
+      border-radius: var(--radius-sm); padding: 8px 16px;
       font-family: inherit; font-size: 13px; font-weight: 700;
       cursor: pointer; transition: opacity .15s; white-space: nowrap;
     }
     .send-btn:hover { opacity: .82; }
     .send-btn:disabled { opacity: .35; cursor: not-allowed; }
-    .send-btn kbd {
-      font-family: inherit; font-size: 11px;
-      opacity: .6; font-weight: 400;
+    .send-btn kbd { font-family: inherit; font-size: 10px; opacity: .55; font-weight: 400; }
+
+    /* ── Progress bar ───────────────────────────────────────────────── */
+    .progress-row {
+      display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
+      scrollbar-width: none; padding: 2px 0;
+    }
+    .progress-row::-webkit-scrollbar { display: none; }
+    .prog-pill {
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 9px; border-radius: 100px; border: 1px solid var(--border);
+      font-size: 11px; font-weight: 600; white-space: nowrap;
+      color: var(--text-3); transition: color .25s, border-color .25s, background .25s;
+      flex-shrink: 0;
+    }
+    .prog-pill.running {
+      color: var(--c, #888); border-color: var(--c, #888);
+      background: color-mix(in srgb, var(--c, #888) 10%, transparent);
+    }
+    .prog-pill.done {
+      color: var(--c, #888); border-color: var(--c, #888); opacity: .65;
+    }
+    .prog-pill.error { color: #f87171; border-color: #f87171; opacity: .8; }
+    .prog-dot-sm {
+      width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+    }
+    .prog-pill.running .prog-dot-sm {
+      -webkit-animation: bounce-dot 1s ease-in-out infinite;
+      animation: bounce-dot 1s ease-in-out infinite;
     }
 
     /* ── Response panel ─────────────────────────────────────────────── */
@@ -137,24 +159,22 @@
     }
     .tab-bar::-webkit-scrollbar { display: none; }
     .tab {
-      display: flex; align-items: center; gap: 7px;
-      padding: 12px 20px; font-family: inherit; font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 14px; font-family: inherit; font-size: 12px; font-weight: 600;
       background: none; border: none; border-bottom: 2px solid transparent;
       cursor: pointer; color: var(--text-2); white-space: nowrap; flex-shrink: 0;
       transition: color .15s, border-color .15s;
     }
     .tab.active { color: var(--text); }
+
+    /* ── Tab dot / spinner ──────────────────────────────────────────── */
     .tab-dot {
-      width: 8px; height: 8px; border-radius: 50%;
+      width: 7px; height: 7px; border-radius: 50%;
       flex-shrink: 0; position: relative;
     }
     .tab-dot.loading::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 2px solid var(--dot-c, #888);
-      border-top-color: transparent;
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid var(--dot-c, #888); border-top-color: transparent;
       -webkit-animation: tab-spin .65s linear infinite;
       animation: tab-spin .65s linear infinite;
     }
@@ -172,19 +192,22 @@
     .tab-panel.active { display: flex; }
     .conversation {
       flex: 1; overflow-y: auto;
-      padding: 20px; display: flex; flex-direction: column; gap: 16px;
-      height: min(580px, calc(100vh - 360px));
-      min-height: 280px;
+      padding: 16px; display: flex; flex-direction: column; gap: 0;
+      height: min(560px, calc(100vh - 340px)); min-height: 260px;
       scrollbar-width: thin; scrollbar-color: var(--border) transparent;
     }
-    .conversation::-webkit-scrollbar { width: 5px; }
-    .conversation::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .conversation::-webkit-scrollbar { width: 4px; }
+    .conversation::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    .msg { display: flex; flex-direction: column; gap: 4px; }
+    /* Q&A pair — newest first (prepended) */
+    .qa-pair { display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px; }
+    .qa-pair + .qa-pair { border-top: 1px solid var(--border); padding-top: 16px; }
+
+    .msg { display: flex; flex-direction: column; gap: 3px; }
     .msg.user { align-items: flex-end; }
-    .msg-label { font-size: 11px; color: var(--text-3); font-weight: 500; padding: 0 4px; }
+    .msg-label { font-size: 10px; color: var(--text-3); font-weight: 600; padding: 0 4px; text-transform: uppercase; letter-spacing: .4px; }
     .msg-bubble {
-      max-width: 88%; padding: 11px 15px;
+      max-width: 90%; padding: 10px 14px;
       font-size: 14px; line-height: 1.65; border-radius: var(--radius);
     }
     .msg.user .msg-bubble {
@@ -208,76 +231,39 @@
     .msg.assistant .msg-bubble pre code { background: none; padding: 0; font-size: inherit; }
     .msg.assistant .msg-bubble h1,
     .msg.assistant .msg-bubble h2,
-    .msg.assistant .msg-bubble h3 { margin: .8em 0 .4em; font-size: 1em; }
+    .msg.assistant .msg-bubble h3 { margin: .8em 0 .4em; font-size: 1em; font-weight: 700; }
     .msg.assistant .msg-bubble ul,
     .msg.assistant .msg-bubble ol { padding-left: 1.4em; margin: .5em 0; }
     .msg.assistant .msg-bubble li { margin-bottom: .3em; }
     .msg.assistant .msg-bubble blockquote {
-      border-left: 3px solid var(--border); padding-left: 12px;
-      color: var(--text-2); margin: .5em 0;
+      border-left: 3px solid var(--border); padding-left: 12px; color: var(--text-2); margin: .5em 0;
     }
     .msg.assistant .msg-bubble table {
       border-collapse: collapse; width: 100%; margin: .8em 0; font-size: 13px;
     }
     .msg.assistant .msg-bubble th,
-    .msg.assistant .msg-bubble td {
-      border: 1px solid var(--border); padding: 6px 10px; text-align: left;
-    }
+    .msg.assistant .msg-bubble td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
     .msg.assistant .msg-bubble th { background: var(--surface-3); font-weight: 600; }
     .msg-error { color: #f87171; font-size: 13px; }
 
     /* Loading dots */
-    .loading-dots {
-      display: flex; gap: 4px; padding: 8px 4px;
-    }
+    .loading-dots { display: flex; gap: 4px; padding: 6px 2px; }
     .dot {
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--text-3); animation: bounce-dot 1.2s ease-in-out infinite;
+      background: var(--text-3);
+      -webkit-animation: bounce-dot 1.2s ease-in-out infinite;
+      animation: bounce-dot 1.2s ease-in-out infinite;
     }
     .dot:nth-child(2) { animation-delay: .18s; }
     .dot:nth-child(3) { animation-delay: .36s; }
-    @keyframes bounce-dot {
-      0%, 80%, 100% { transform: scale(.75); opacity: .4; }
-      40% { transform: scale(1); opacity: 1; }
-    }
+    @keyframes bounce-dot { 0%, 80%, 100% { transform: scale(.75); opacity: .4; } 40% { transform: scale(1); opacity: 1; } }
 
     .empty-state {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 8px; color: var(--text-3); font-size: 13px;
-      padding: 40px 0;
+      gap: 8px; color: var(--text-3); font-size: 13px; padding: 40px 0;
     }
-    .empty-icon { font-size: 32px; opacity: .3; }
-
-    /* ── Tab footer ─────────────────────────────────────────────────── */
-    .tab-footer {
-      display: flex; gap: 8px; align-items: center;
-      padding: 10px 14px; border-top: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .reply-input {
-      flex: 1; min-width: 120px;
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text);
-      font-family: inherit; font-size: 14px;
-      padding: 8px 12px; outline: none; transition: border-color .15s;
-    }
-    .reply-input:focus { border-color: var(--text-3); }
-    .reply-input::placeholder { color: var(--text-3); }
-    .reply-btn {
-      border: none; border-radius: var(--radius-sm);
-      font-family: inherit; font-size: 13px; font-weight: 600;
-      padding: 8px 16px; cursor: pointer;
-      color: #fff; transition: opacity .15s; white-space: nowrap;
-    }
-    .reply-btn:hover { opacity: .85; }
-    .reply-btn:disabled { opacity: .35; cursor: not-allowed; }
-    .open-btn {
-      background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
-      color: var(--text-2); font-family: inherit; font-size: 12px;
-      padding: 7px 12px; cursor: pointer; transition: all .15s; white-space: nowrap;
-    }
-    .open-btn:hover { background: var(--surface-2); color: var(--text); }
+    .empty-icon { font-size: 28px; opacity: .3; }
 
     /* ── Config modal ───────────────────────────────────────────────── */
     .backdrop {
@@ -294,24 +280,21 @@
     }
     .modal-head {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 20px; border-bottom: 1px solid var(--border);
+      padding: 16px 18px; border-bottom: 1px solid var(--border);
       position: sticky; top: 0; background: var(--surface);
     }
-    .modal-title { font-size: 15px; font-weight: 700; }
-    .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 28px; }
-    .svc-section { display: flex; flex-direction: column; gap: 14px; }
-    .svc-head {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 13px; font-weight: 700;
-    }
-    .svc-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .field { display: flex; flex-direction: column; gap: 5px; }
-    .field-label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .5px; }
+    .modal-title { font-size: 14px; font-weight: 700; }
+    .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 24px; }
+    .svc-section { display: flex; flex-direction: column; gap: 12px; }
+    .svc-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+    .svc-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field-label { font-size: 10px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: .5px; }
     .field-input {
       background: var(--surface-2); border: 1px solid var(--border);
       border-radius: var(--radius-sm); color: var(--text);
       font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px;
-      padding: 9px 13px; width: 100%; outline: none; transition: border-color .15s;
+      padding: 8px 12px; width: 100%; outline: none; transition: border-color .15s;
     }
     select.field-input { font-family: inherit; cursor: pointer; }
     .field-input:focus { border-color: var(--text-2); }
@@ -319,15 +302,15 @@
     .field-hint a { color: var(--text-2); }
     .security-note {
       background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 12px 14px;
+      border-radius: var(--radius-sm); padding: 11px 13px;
       font-size: 12px; color: var(--text-2); line-height: 1.5;
     }
     .modal-foot {
       display: flex; gap: 8px; justify-content: space-between;
-      padding: 14px 20px; border-top: 1px solid var(--border);
+      padding: 12px 18px; border-top: 1px solid var(--border);
       position: sticky; bottom: 0; background: var(--surface);
     }
-    .btn { border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; font-weight: 600; padding: 9px 18px; cursor: pointer; transition: all .15s; border: 1px solid; }
+    .btn { border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; transition: all .15s; border: 1px solid; }
     .btn-ghost { background: none; border-color: var(--border); color: var(--text-2); }
     .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
     .btn-danger { background: none; border-color: transparent; color: #f87171; }
@@ -340,22 +323,21 @@
       position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(12px);
       background: var(--text); color: var(--bg);
-      padding: 9px 18px; border-radius: 100px;
+      padding: 8px 16px; border-radius: 100px;
       font-size: 13px; font-weight: 500; z-index: 400;
-      opacity: 0; transition: all .25s; white-space: nowrap;
-      pointer-events: none;
+      opacity: 0; transition: all .25s; white-space: nowrap; pointer-events: none;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ── Responsive ─────────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .app { padding: 12px; gap: 12px; }
-      header { padding: 12px 14px; }
-      .conversation { height: min(420px, calc(100vh - 320px)); }
-      .msg-bubble { max-width: 96%; }
-      .tab-footer { gap: 6px; }
+      .app { padding: 10px; gap: 10px; }
+      header { padding: 10px 12px; }
+      .conversation { height: min(400px, calc(100vh - 300px)); }
+      .msg-bubble { max-width: 98%; font-size: 13px; }
       .send-btn kbd { display: none; }
-      .modal-body { padding: 16px; gap: 22px; }
+      .modal-body { padding: 14px; gap: 20px; }
+      .tab { padding: 9px 11px; font-size: 11px; gap: 5px; }
     }
   </style>
 </head>
@@ -363,15 +345,21 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span> <span style="font-size:11px;font-weight:400;color:var(--text-3);letter-spacing:0">v2026-06-04 16:20</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 17:10</span></div>
   <div class="header-actions">
-    <button class="icon-btn" id="themeBtn" title="Toggle theme">
-      <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <button class="icon-btn" id="resetBtn" title="New chat">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.39"/>
+      </svg>
+      New chat
+    </button>
+    <button class="icon-btn icon-only" id="themeBtn" title="Toggle theme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
       </svg>
     </button>
-    <button class="icon-btn" id="configBtn" title="API configuration">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <button class="icon-btn icon-only" id="configBtn" title="API configuration">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
       </svg>
@@ -385,18 +373,20 @@
 
   <div class="prompt-card">
     <textarea class="prompt-input" id="promptInput"
-      placeholder="Type your prompt — it'll be sent to all configured models simultaneously&#10;&#10;⌘↵ or Ctrl↵ to send"></textarea>
+      placeholder="Type your prompt — sent to all configured models simultaneously&#10;&#10;⌘↵ or Ctrl↵ to send"></textarea>
     <div class="prompt-footer">
       <span class="prompt-targets" id="promptTargets"></span>
       <button class="send-btn" id="sendBtn" disabled>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="22" y1="2" x2="11" y2="13"/>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
         </svg>
         Send to all <kbd>⌘↵</kbd>
       </button>
     </div>
   </div>
+
+  <!-- Progress bar (shown during broadcast) -->
+  <div class="progress-row" id="progressRow" style="display:none"></div>
 
   <div class="responses" id="responses" style="display:none">
     <div class="tab-bar" id="tabBar"></div>
@@ -409,19 +399,15 @@
   <div class="modal" role="dialog" aria-modal="true" aria-label="API Configuration">
     <div class="modal-head">
       <span class="modal-title">API Configuration</span>
-      <button class="icon-btn" id="closeConfig">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <button class="icon-btn icon-only" id="closeConfig">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
     </div>
     <div class="modal-body">
-
       <div class="svc-section">
-        <div class="svc-head">
-          <div class="svc-dot" style="background:var(--claude)"></div>
-          Claude (Anthropic)
-        </div>
+        <div class="svc-head"><div class="svc-dot" style="background:var(--claude)"></div>Claude (Anthropic)</div>
         <div class="field">
           <label class="field-label" for="claudeKey">API Key</label>
           <input type="password" class="field-input" id="claudeKey" placeholder="sk-ant-api03-…" autocomplete="off">
@@ -436,12 +422,8 @@
           </select>
         </div>
       </div>
-
       <div class="svc-section">
-        <div class="svc-head">
-          <div class="svc-dot" style="background:var(--gemini)"></div>
-          Gemini (Google)
-        </div>
+        <div class="svc-head"><div class="svc-dot" style="background:var(--gemini)"></div>Gemini (Google)</div>
         <div class="field">
           <label class="field-label" for="geminiKey">API Key</label>
           <input type="password" class="field-input" id="geminiKey" placeholder="AIzaSy…" autocomplete="off">
@@ -457,12 +439,8 @@
           </select>
         </div>
       </div>
-
       <div class="svc-section">
-        <div class="svc-head">
-          <div class="svc-dot" style="background:var(--openai)"></div>
-          ChatGPT (OpenAI)
-        </div>
+        <div class="svc-head"><div class="svc-dot" style="background:var(--openai)"></div>ChatGPT (OpenAI)</div>
         <div class="field">
           <label class="field-label" for="openaiKey">API Key</label>
           <input type="password" class="field-input" id="openaiKey" placeholder="sk-proj-…" autocomplete="off">
@@ -478,10 +456,8 @@
           </select>
         </div>
       </div>
-
       <div class="security-note">
-        🔒 Keys are stored in your browser's <strong>localStorage</strong> and never leave your device.
-        Avoid using this app on shared or public computers.
+        🔒 Keys are stored in your browser's <strong>localStorage</strong> and never leave your device. Avoid shared/public computers.
       </div>
     </div>
     <div class="modal-foot">
@@ -502,9 +478,9 @@
 
 // ── Service definitions ───────────────────────────────────────────────
 const SVC = {
-  claude: { name: 'Claude',   color: '#d4773b', openUrl: 'https://claude.ai/new' },
-  gemini: { name: 'Gemini',   color: '#4285f4', openUrl: 'https://gemini.google.com/app' },
-  openai: { name: 'ChatGPT',  color: '#10a37f', openUrl: 'https://chatgpt.com/' },
+  claude: { name: 'Claude', tabLabel: 'Claude', color: '#d4773b', openUrl: 'https://claude.ai/new' },
+  gemini: { name: 'Gemini', tabLabel: 'Gemini', color: '#4285f4', openUrl: 'https://gemini.google.com/app' },
+  openai: { name: 'ChatGPT', tabLabel: 'GPT',   color: '#10a37f', openUrl: 'https://chatgpt.com/' },
 };
 
 // ── Config ────────────────────────────────────────────────────────────
@@ -523,8 +499,8 @@ const convos = { claude: [], gemini: [], openai: [] };
 
 // ── Consensus state ───────────────────────────────────────────────────
 let lastBroadcastPrompt = '';
-let broadcastResults   = {};  // { svcId: text | null }
-let completionOrder    = [];  // svcIds in order of completion
+let broadcastResults   = {};
+let completionOrder    = [];
 
 // ── Toast ─────────────────────────────────────────────────────────────
 let toastTimer;
@@ -539,26 +515,60 @@ function toast(msg, dur = 2800) {
 // ── Status row ────────────────────────────────────────────────────────
 function refreshStatus() {
   const active = activeServices();
-  const row = document.getElementById('statusRow');
-  const sendBtn = document.getElementById('sendBtn');
-  const targets = document.getElementById('promptTargets');
+  const row    = document.getElementById('statusRow');
+  const btn    = document.getElementById('sendBtn');
+  const tgt    = document.getElementById('promptTargets');
 
   if (!active.length) {
-    row.innerHTML = `<div class="no-config-hint">
-      No services configured — <button onclick="openConfig()">add API keys ⚙</button> to get started
-    </div>`;
-    sendBtn.disabled = true;
-    targets.textContent = '';
+    row.innerHTML = `<div class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></div>`;
+    btn.disabled = true; tgt.textContent = '';
     return;
   }
-
-  row.innerHTML = active.map(id => `
-    <span class="status-chip" style="color:${SVC[id].color};border-color:${SVC[id].color}40">
+  row.innerHTML = active.map(id =>
+    `<span class="status-chip" style="color:${SVC[id].color};border-color:${SVC[id].color}40">
       <span class="chip-dot"></span>${SVC[id].name}
     </span>`).join('');
+  btn.disabled = false;
+  tgt.textContent = `→ ${active.map(id => SVC[id].name).join(' · ')}`;
+}
 
-  sendBtn.disabled = false;
-  targets.textContent = `→ ${active.map(id => SVC[id].name).join(' · ')}`;
+// ── Progress bar ──────────────────────────────────────────────────────
+const PROG_SVCS = [...Object.keys(SVC), 'consensus'];
+const PROG_META = {
+  claude:    { label: 'Claude',    color: '#d4773b' },
+  gemini:    { label: 'Gemini',    color: '#4285f4' },
+  openai:    { label: 'GPT',       color: '#10a37f' },
+  consensus: { label: 'Consensus', color: '#9333ea' },
+};
+
+function initProgress(services) {
+  const row = document.getElementById('progressRow');
+  const all = [...services, 'consensus'];
+  row.innerHTML = all.map(id => {
+    const m = PROG_META[id];
+    return `<div class="prog-pill" id="prog_${id}" style="--c:${m.color}">
+      <span class="prog-dot-sm"></span>${m.label}
+    </div>`;
+  }).join('');
+  row.style.display = 'flex';
+}
+
+function setProgress(id, state, label) {
+  const el = document.getElementById('prog_' + id);
+  if (!el) return;
+  el.className = `prog-pill ${state}`;
+  el.style.setProperty('--c', PROG_META[id]?.color || '#888');
+  if (label) {
+    // Replace text node (last child) with new label
+    const dot = el.querySelector('.prog-dot-sm');
+    el.innerHTML = '';
+    el.appendChild(dot);
+    el.append(' ' + label);
+  }
+}
+
+function hideProgress() {
+  document.getElementById('progressRow').style.display = 'none';
 }
 
 // ── Tab management ────────────────────────────────────────────────────
@@ -566,22 +576,20 @@ let activeTab = null;
 
 function ensureTabs() {
   const services = activeServices();
-  const tabBar = document.getElementById('tabBar');
-  const panels = document.getElementById('tabPanels');
+  const tabBar   = document.getElementById('tabBar');
+  const panels   = document.getElementById('tabPanels');
 
   services.forEach(id => {
     if (document.getElementById('tab_' + id)) return;
 
-    // Tab button
     const btn = document.createElement('button');
     btn.className = 'tab';
     btn.id = 'tab_' + id;
     btn.setAttribute('data-svc', id);
     btn.onclick = () => switchTab(id);
-    btn.innerHTML = `<span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>${SVC[id].name}`;
+    btn.innerHTML = `<span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>${SVC[id].tabLabel}`;
     tabBar.appendChild(btn);
 
-    // Panel
     const panel = document.createElement('div');
     panel.className = 'tab-panel';
     panel.id = 'panel_' + id;
@@ -589,29 +597,21 @@ function ensureTabs() {
       <div class="conversation" id="conv_${id}">
         <div class="empty-state" id="empty_${id}">
           <div class="empty-icon">◎</div>
-          <div>Send a prompt to start chatting with ${SVC[id].name}</div>
+          <div>Send a prompt to see ${SVC[id].name}'s response</div>
         </div>
-      </div>
-      <div class="tab-footer">
-        <input class="reply-input" id="reply_${id}"
-               placeholder="Reply to ${SVC[id].name}…"
-               onkeydown="onReplyKey(event,'${id}')">
-        <button class="reply-btn" id="replyBtn_${id}"
-                style="background:${SVC[id].color}"
-                onclick="sendReply('${id}')">Reply</button>
-        <button class="open-btn" onclick="openInService('${id}')">Open in ${SVC[id].name} ↗</button>
       </div>`;
     panels.appendChild(panel);
   });
 
-  // Consensus tab — always added last, only once
+  // Consensus tab — always last, only once
   if (!document.getElementById('tab_consensus')) {
     const btn = document.createElement('button');
     btn.className = 'tab';
     btn.id = 'tab_consensus';
     btn.setAttribute('data-svc', 'consensus');
     btn.onclick = () => switchTab('consensus');
-    btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>Consensus`;
+    btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>✦`;
+    btn.title = 'Consensus';
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
@@ -620,7 +620,7 @@ function ensureTabs() {
     panel.innerHTML = `
       <div class="conversation" id="conv_consensus">
         <div class="empty-state" id="empty_consensus">
-          <div class="empty-icon" style="font-size:28px;background:linear-gradient(135deg,var(--claude),var(--gemini),var(--openai));-webkit-background-clip:text;-webkit-text-fill-color:transparent">✦</div>
+          <div class="empty-icon" style="font-size:26px;background:linear-gradient(135deg,var(--claude),var(--gemini),var(--openai));-webkit-background-clip:text;-webkit-text-fill-color:transparent">✦</div>
           <div id="consensus-status">Consensus will appear here after all models respond</div>
         </div>
       </div>`;
@@ -637,74 +637,31 @@ function switchTab(id) {
     const isActive = t.getAttribute('data-svc') === id;
     t.classList.toggle('active', isActive);
     t.style.borderBottomColor = isActive ? color : 'transparent';
-    if (isActive) t.style.color = 'var(--text)';
-    else t.style.color = '';
+    t.style.color = isActive ? 'var(--text)' : '';
   });
   document.querySelectorAll('.tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === 'panel_' + id);
   });
 }
 
-// ── Message rendering ─────────────────────────────────────────────────
+// ── Markdown ──────────────────────────────────────────────────────────
 function renderMarkdown(text) {
-  if (typeof marked === 'undefined') return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  if (typeof marked === 'undefined')
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   return marked.parse(text);
 }
 
-function appendMsg(svcId, role, content, isError = false) {
-  const conv = document.getElementById('conv_' + svcId);
-  const empty = document.getElementById('empty_' + svcId);
-  if (empty) empty.remove();
-
-  const el = document.createElement('div');
-  el.className = `msg ${role}`;
-
-  if (role === 'user') {
-    const safe = content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-    el.innerHTML = `<span class="msg-label">You</span><div class="msg-bubble">${safe}</div>`;
-  } else {
-    const bubbleId = `bubble_${svcId}_${Date.now()}`;
-    el.innerHTML = `<span class="msg-label">${SVC[svcId].name}</span>
-      <div class="msg-bubble" id="${bubbleId}">${isError ? `<span class="msg-error">${content}</span>` : renderMarkdown(content)}</div>`;
-  }
-
-  conv.appendChild(el);
-  conv.scrollTop = conv.scrollHeight;
-  return el;
+function highlightBubble(bubble) {
+  bubble.querySelectorAll('pre code').forEach(b => {
+    if (typeof hljs !== 'undefined') hljs.highlightElement(b);
+  });
 }
 
-function showThinking(svcId) {
-  const conv = document.getElementById('conv_' + svcId);
-  const empty = document.getElementById('empty_' + svcId);
-  if (empty) empty.remove();
-
-  const el = document.createElement('div');
-  el.className = 'msg assistant';
-  el.id = 'thinking_' + svcId;
-  el.innerHTML = `<span class="msg-label">${SVC[svcId].name}</span>
-    <div class="msg-bubble">
-      <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-    </div>`;
-  conv.appendChild(el);
-  conv.scrollTop = conv.scrollHeight;
-
-  const dot = document.getElementById('tdot_' + svcId);
-  if (dot) dot.classList.add('loading');
-}
-
-function removeThinking(svcId) {
-  const el = document.getElementById('thinking_' + svcId);
-  if (el) el.remove();
-  const dot = document.getElementById('tdot_' + svcId);
-  if (dot) { dot.classList.remove('loading'); dot.classList.add('done'); setTimeout(() => dot.classList.remove('done'), 300); }
-}
-
-// ── SSE reader (generic) ──────────────────────────────────────────────
+// ── SSE reader ────────────────────────────────────────────────────────
 async function* sseReader(response, extract) {
   const reader = response.body.getReader();
   const dec = new TextDecoder();
-  let buf = '';
-  let evtName = null;
+  let buf = '', evtName = null;
 
   while (true) {
     const { done, value } = await reader.read();
@@ -714,20 +671,13 @@ async function* sseReader(response, extract) {
     buf = lines.pop() ?? '';
 
     for (const line of lines) {
-      if (line.startsWith('event:')) {
-        evtName = line.slice(6).trim();
-      } else if (line.startsWith('data:')) {
+      if (line.startsWith('event:')) { evtName = line.slice(6).trim(); }
+      else if (line.startsWith('data:')) {
         const raw = line.slice(5).trim();
         if (raw === '[DONE]') return;
-        try {
-          const data = JSON.parse(raw);
-          const chunk = extract(evtName, data);
-          if (chunk) yield chunk;
-        } catch { /* skip malformed */ }
+        try { const d = JSON.parse(raw); const c = extract(evtName, d); if (c) yield c; } catch {}
         evtName = null;
-      } else if (line === '') {
-        evtName = null;
-      }
+      } else if (line === '') { evtName = null; }
     }
   }
 }
@@ -744,31 +694,22 @@ async function* apiClaude(messages, cfg) {
     },
     body: JSON.stringify({
       model: cfg.claudeModel || 'claude-sonnet-4-6',
-      max_tokens: 8096,
-      stream: true,
+      max_tokens: 8096, stream: true,
       messages: messages.map(m => ({ role: m.role, content: m.content })),
     }),
   });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `HTTP ${resp.status}`);
-  }
-  yield* sseReader(resp, (_, d) =>
-    d?.type === 'content_block_delta' && d?.delta?.type === 'text_delta'
-      ? d.delta.text : null);
+  if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.error?.message || `HTTP ${resp.status}`); }
+  yield* sseReader(resp, (_, d) => d?.type === 'content_block_delta' && d?.delta?.type === 'text_delta' ? d.delta.text : null);
 }
 
 // ── API: Gemini ───────────────────────────────────────────────────────
 function geminiContents(messages) {
-  // Merge consecutive same-role messages (Gemini requires strict alternation)
   const merged = [];
   for (const m of messages) {
     const role = m.role === 'assistant' ? 'model' : 'user';
-    if (merged.length && merged[merged.length-1].role === role) {
+    if (merged.length && merged[merged.length-1].role === role)
       merged[merged.length-1].parts[0].text += '\n\n' + m.content;
-    } else {
-      merged.push({ role, parts: [{ text: m.content }] });
-    }
+    else merged.push({ role, parts: [{ text: m.content }] });
   }
   return merged;
 }
@@ -777,103 +718,100 @@ async function* apiGemini(messages, cfg) {
   const model = cfg.geminiModel || 'gemini-3.5-flash';
   const resp = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${cfg.gemini_key}&alt=sse`,
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ contents: geminiContents(messages) }),
-    }
+    { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ contents: geminiContents(messages) }) }
   );
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `HTTP ${resp.status}`);
-  }
-  yield* sseReader(resp, (_, d) =>
-    d?.candidates?.[0]?.content?.parts?.[0]?.text ?? null);
+  if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.error?.message || `HTTP ${resp.status}`); }
+  yield* sseReader(resp, (_, d) => d?.candidates?.[0]?.content?.parts?.[0]?.text ?? null);
 }
 
 // ── API: OpenAI ───────────────────────────────────────────────────────
 async function* apiOpenAI(messages, cfg) {
   const resp = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'authorization': `Bearer ${cfg.openai_key}`,
-      'content-type': 'application/json',
-    },
+    headers: { 'authorization': `Bearer ${cfg.openai_key}`, 'content-type': 'application/json' },
     body: JSON.stringify({
-      model: cfg.openaiModel || 'gpt-4o',
-      stream: true,
+      model: cfg.openaiModel || 'gpt-4o', stream: true,
       messages: messages.map(m => ({ role: m.role, content: m.content })),
     }),
   });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `HTTP ${resp.status}`);
-  }
-  yield* sseReader(resp, (_, d) =>
-    d?.choices?.[0]?.delta?.content ?? null);
+  if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.error?.message || `HTTP ${resp.status}`); }
+  yield* sseReader(resp, (_, d) => d?.choices?.[0]?.delta?.content ?? null);
 }
 
-// ── Stream to one service ─────────────────────────────────────────────
+// ── Generator helper ──────────────────────────────────────────────────
+function makeGen(svcId, messages, cfg) {
+  if (svcId === 'claude') return apiClaude(messages, cfg);
+  if (svcId === 'gemini') return apiGemini(messages, cfg);
+  return apiOpenAI(messages, cfg);
+}
+
+// ── Stream to one service (prepends Q&A pair, manages dot) ────────────
 async function streamTo(svcId, userContent) {
   const cfg = loadCfg();
   convos[svcId].push({ role: 'user', content: userContent });
 
-  showThinking(svcId);
-  setReplyDisabled(svcId, true);
+  // Build Q&A pair and PREPEND (newest at top)
+  const conv  = document.getElementById('conv_' + svcId);
+  const empty = document.getElementById('empty_' + svcId);
+  if (empty) empty.remove();
 
+  const pair = document.createElement('div');
+  pair.className = 'qa-pair';
+  const safe = userContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  pair.innerHTML = `
+    <div class="msg user">
+      <span class="msg-label">You</span>
+      <div class="msg-bubble">${safe}</div>
+    </div>
+    <div class="msg assistant">
+      <span class="msg-label">${SVC[svcId].name}</span>
+      <div class="msg-bubble" id="mbubble_${svcId}">
+        <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+    </div>`;
+  conv.prepend(pair);
+  conv.scrollTop = 0;
+
+  // Tab dot spinner — stays on for full response duration
+  const dot = document.getElementById('tdot_' + svcId);
+  if (dot) dot.classList.add('loading');
+
+  const bubble = document.getElementById('mbubble_' + svcId);
   let full = '';
-  let bubbleEl = null;
 
   try {
-    let gen;
-    if (svcId === 'claude') gen = apiClaude(convos[svcId], cfg);
-    else if (svcId === 'gemini') gen = apiGemini(convos[svcId], cfg);
-    else gen = apiOpenAI(convos[svcId], cfg);
-
-    removeThinking(svcId);
-    const msgEl = appendMsg(svcId, 'assistant', '');
-    bubbleEl = msgEl.querySelector('.msg-bubble');
+    const gen = makeGen(svcId, convos[svcId], cfg);
+    bubble.innerHTML = ''; // clear loading dots
 
     for await (const chunk of gen) {
       full += chunk;
-      bubbleEl.innerHTML = renderMarkdown(full);
-      const conv = document.getElementById('conv_' + svcId);
-      if (conv) conv.scrollTop = conv.scrollHeight;
+      bubble.innerHTML = renderMarkdown(full);
     }
 
-    if (!full) bubbleEl.textContent = '(no response)';
-    else {
-      // Re-highlight code blocks after full render
-      bubbleEl.querySelectorAll('pre code').forEach(el => {
-        if (typeof hljs !== 'undefined') hljs.highlightElement(el);
-      });
-    }
+    if (!full) bubble.textContent = '(no response)';
+    else highlightBubble(bubble);
 
     convos[svcId].push({ role: 'assistant', content: full });
     return full;
 
   } catch (err) {
-    removeThinking(svcId);
-    appendMsg(svcId, 'assistant', `Error: ${err.message}`, true);
+    bubble.innerHTML = `<span class="msg-error">Error: ${err.message}</span>`;
     convos[svcId].pop();
     return null;
-  } finally {
-    setReplyDisabled(svcId, false);
-  }
-}
 
-function setReplyDisabled(svcId, disabled) {
-  const inp = document.getElementById('reply_' + svcId);
-  const btn = document.getElementById('replyBtn_' + svcId);
-  if (inp) inp.disabled = disabled;
-  if (btn) btn.disabled = disabled;
+  } finally {
+    if (dot) {
+      dot.classList.remove('loading');
+      dot.classList.add('done');
+      setTimeout(() => dot.classList.remove('done'), 350);
+    }
+  }
 }
 
 // ── Broadcast send ────────────────────────────────────────────────────
 async function sendAll() {
-  const text = document.getElementById('promptInput').value.trim();
+  const text     = document.getElementById('promptInput').value.trim();
   if (!text) return;
-
   const services = activeServices();
   if (!services.length) { openConfig(); return; }
 
@@ -884,27 +822,63 @@ async function sendAll() {
   document.getElementById('promptInput').value = '';
   document.getElementById('promptInput').style.height = 'auto';
   document.getElementById('sendBtn').disabled = true;
-
   document.getElementById('responses').style.display = '';
+
   ensureTabs();
+  initProgress(services);
 
-  services.forEach(id => appendMsg(id, 'user', text));
+  // Mark all services as running
+  services.forEach(id => setProgress(id, 'running'));
+  setProgress('consensus', 'pending');
 
-  // Consensus: start spinner and waiting message
-  setConsensusStatus('Waiting for models to respond…');
-  setConsensusDot(true);
-
-  // Fire all services in parallel; track order of completion
+  // Fire all services in parallel
   await Promise.allSettled(services.map(async id => {
     const result = await streamTo(id, text);
     completionOrder.push(id);
-    broadcastResults[id] = result; // null if errored
+    broadcastResults[id] = result;
+    setProgress(id, result !== null ? 'done' : 'error');
   }));
 
-  // All settled — run consensus synthesis
+  // Consensus synthesis
+  setProgress('consensus', 'running');
+  setConsensusDot(true);
+  setConsensusStatus('Waiting for models…');
+
   await runConsensus();
 
+  setConsensusDot(false);
+  setProgress('consensus', 'done');
+
   document.getElementById('sendBtn').disabled = false;
+}
+
+// ── Reset / New chat ──────────────────────────────────────────────────
+function resetApp() {
+  // Clear state
+  Object.keys(convos).forEach(id => convos[id] = []);
+  lastBroadcastPrompt = '';
+  broadcastResults    = {};
+  completionOrder     = [];
+
+  // Clear conversation panels
+  document.querySelectorAll('.conversation').forEach(conv => {
+    const svcId = conv.id.replace('conv_', '');
+    const label = svcId === 'consensus'
+      ? 'Consensus will appear here after all models respond'
+      : `Send a prompt to see ${SVC[svcId]?.name || svcId}'s response`;
+    const icon = svcId === 'consensus'
+      ? `<div class="empty-icon" style="font-size:26px;background:linear-gradient(135deg,var(--claude),var(--gemini),var(--openai));-webkit-background-clip:text;-webkit-text-fill-color:transparent">✦</div>`
+      : `<div class="empty-icon">◎</div>`;
+    conv.innerHTML = `<div class="empty-state" id="empty_${svcId}">${icon}<div id="${svcId === 'consensus' ? 'consensus-status' : ''}">${label}</div></div>`;
+  });
+
+  // Reset tab dots
+  document.querySelectorAll('.tab-dot').forEach(d => {
+    d.classList.remove('loading', 'done');
+  });
+
+  hideProgress();
+  document.getElementById('promptInput').focus();
 }
 
 // ── Consensus helpers ─────────────────────────────────────────────────
@@ -925,88 +899,71 @@ function setConsensusDot(loading) {
   }
 }
 
-// Silent API call — collects full text with no UI updates
+// Silent API call — no UI update, just returns text
 async function getSilentText(svcId, messages) {
   const cfg = loadCfg();
   let text = '';
-  let gen;
-  if (svcId === 'claude')      gen = apiClaude(messages, cfg);
-  else if (svcId === 'gemini') gen = apiGemini(messages, cfg);
-  else                         gen = apiOpenAI(messages, cfg);
-  for await (const chunk of gen) text += chunk;
+  for await (const chunk of makeGen(svcId, messages, cfg)) text += chunk;
   return text;
 }
 
 // Stream the final synthesis into the Consensus tab
 async function streamToConsensusTab(svcId, messages) {
-  const cfg = loadCfg();
+  const cfg  = loadCfg();
   const conv = document.getElementById('conv_consensus');
-
-  // Clear empty/status state
   conv.innerHTML = '';
 
-  const el = document.createElement('div');
-  el.className = 'msg assistant';
-  el.innerHTML = `<span class="msg-label">Consensus</span><div class="msg-bubble" id="consensus-bubble"></div>`;
-  conv.appendChild(el);
+  const pair = document.createElement('div');
+  pair.className = 'qa-pair';
+  pair.innerHTML = `<div class="msg assistant">
+    <span class="msg-label">Consensus</span>
+    <div class="msg-bubble" id="consensus-bubble"></div>
+  </div>`;
+  conv.appendChild(pair);
   const bubble = document.getElementById('consensus-bubble');
 
   let fullText = '';
-  let gen;
-  if (svcId === 'claude')      gen = apiClaude(messages, cfg);
-  else if (svcId === 'gemini') gen = apiGemini(messages, cfg);
-  else                         gen = apiOpenAI(messages, cfg);
-
-  for await (const chunk of gen) {
+  for await (const chunk of makeGen(svcId, messages, cfg)) {
     fullText += chunk;
     bubble.innerHTML = renderMarkdown(fullText);
-    conv.scrollTop = conv.scrollHeight;
+    conv.scrollTop = 0;
   }
 
   if (!fullText) bubble.textContent = '(no response)';
-  else bubble.querySelectorAll('pre code').forEach(b => {
-    if (typeof hljs !== 'undefined') hljs.highlightElement(b);
-  });
-
+  else highlightBubble(bubble);
   return fullText;
 }
 
-// Show a static (non-streamed) result in the Consensus tab
+// Show a static result in Consensus tab (no streaming)
 function showConsensusStatic(text, isError = false) {
   const conv = document.getElementById('conv_consensus');
   conv.innerHTML = '';
-  const el = document.createElement('div');
-  el.className = 'msg assistant';
-  el.innerHTML = isError
-    ? `<span class="msg-label">Consensus</span><div class="msg-bubble"><span class="msg-error">${text}</span></div>`
-    : `<span class="msg-label">Consensus</span><div class="msg-bubble">${renderMarkdown(text)}</div>`;
-  conv.appendChild(el);
-  if (!isError) el.querySelectorAll('pre code').forEach(b => {
-    if (typeof hljs !== 'undefined') hljs.highlightElement(b);
-  });
+  const pair = document.createElement('div');
+  pair.className = 'qa-pair';
+  pair.innerHTML = isError
+    ? `<div class="msg assistant"><span class="msg-label">Consensus</span><div class="msg-bubble"><span class="msg-error">${text}</span></div></div>`
+    : `<div class="msg assistant"><span class="msg-label">Consensus</span><div class="msg-bubble">${renderMarkdown(text)}</div></div>`;
+  conv.appendChild(pair);
+  if (!isError) highlightBubble(pair);
 }
 
 // ── Consensus orchestration ───────────────────────────────────────────
 async function runConsensus() {
-  // Only work with services that returned non-empty text
   const ordered = completionOrder.filter(id => broadcastResults[id]);
 
   if (ordered.length === 0) {
-    setConsensusDot(false);
     showConsensusStatic('All models failed to respond — no consensus available.', true);
     return;
   }
 
   if (ordered.length === 1) {
-    // One response: use it directly
-    setConsensusDot(false);
     showConsensusStatic(broadcastResults[ordered[0]]);
     return;
   }
 
   const [first, second, third] = ordered;
 
-  const step1Prompt = `${SVC[second].name} provided the following response to the same question:\n\n${broadcastResults[second]}\n\nPlease review this response and incorporate any valuable additions, then make any corrections or adjustments to your answer to produce the best possible result.`;
+  const step1Prompt = `${SVC[second].name} provided the following response to the same question:\n\n${broadcastResults[second]}\n\nPlease review this response and incorporate any valuable additions, then make any corrections or adjustments to produce the best possible answer.`;
 
   const step1Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
@@ -1015,82 +972,56 @@ async function runConsensus() {
   ];
 
   if (!third) {
-    // ── 2-model path: stream step 1 directly as final consensus ──────
-    setConsensusStatus(`${SVC[first].name} synthesizing final answer…`);
+    // ── 2-model: stream step 1 directly as final consensus ───────────
+    const synLabel2 = `${SVC[first].tabLabel} + ${SVC[second].tabLabel}`;
+    setConsensusStatus(`${SVC[first].name} synthesizing…`);
+    setProgress('consensus', 'running', synLabel2);
     try {
       await streamToConsensusTab(first, step1Messages);
     } catch {
       showConsensusStatic(broadcastResults[first]);
     }
-    setConsensusDot(false);
     return;
   }
 
-  // ── 3-model path ──────────────────────────────────────────────────
-  // Step 1: silent — first model reviews second's response
-  setConsensusStatus(`${SVC[first].name} reviewing ${SVC[second].name}'s response…`);
-  let synthesis = broadcastResults[first]; // fallback if step 1 errors
+  // ── 3-model: silent step 1, then stream step 2 ───────────────────
+  const step1Label = `${SVC[first].tabLabel} ↔ ${SVC[second].tabLabel}`;
+  setConsensusStatus(`${SVC[first].name} reviewing ${SVC[second].name}…`);
+  setProgress('consensus', 'running', step1Label);
+  let synthesis = broadcastResults[first];
   try {
     synthesis = await getSilentText(first, step1Messages);
   } catch { /* use fallback */ }
 
-  // Step 2: third model gets the synthesis + its own response → streams to tab
+  const step2Label = `${SVC[third].tabLabel} finalizing`;
   setConsensusStatus(`${SVC[third].name} producing final consensus…`);
-
-  const step2Prompt = `${SVC[first].name} and ${SVC[second].name} synthesized the following response:\n\n${synthesis}\n\nPlease review this synthesized response and incorporate any valuable additions or corrections from your own analysis to produce the definitive best possible final answer.`;
+  setProgress('consensus', 'running', step2Label);
 
   const step2Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
     { role: 'assistant', content: broadcastResults[third] },
-    { role: 'user',      content: step2Prompt },
+    { role: 'user',      content: `${SVC[first].name} and ${SVC[second].name} synthesized the following response:\n\n${synthesis}\n\nPlease review this synthesized response and incorporate any valuable additions or corrections from your own analysis to produce the definitive best possible final answer.` },
   ];
 
   try {
     await streamToConsensusTab(third, step2Messages);
   } catch {
-    // Final step failed — fall back to step 1 synthesis
     showConsensusStatic(synthesis);
   }
-
-  setConsensusDot(false);
-}
-
-// ── Per-service reply ─────────────────────────────────────────────────
-async function sendReply(svcId) {
-  const inp = document.getElementById('reply_' + svcId);
-  const text = inp.value.trim();
-  if (!text) return;
-  inp.value = '';
-  await streamTo(svcId, text);
-}
-
-function onReplyKey(e, svcId) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(svcId); }
 }
 
 // ── Open in service ───────────────────────────────────────────────────
 function openInService(svcId) {
   const conv = convos[svcId];
   if (!conv.length) { toast('No conversation yet — send a prompt first'); return; }
-
-  const svc = SVC[svcId];
+  const svc        = SVC[svcId];
   const lastPrompt = [...conv].reverse().find(m => m.role === 'user')?.content ?? '';
-
-  // Build a text summary for clipboard
-  const summary = conv.map(m =>
-    `${m.role === 'user' ? 'You' : svc.name}:\n${m.content}`
-  ).join('\n\n---\n\n');
-
-  // Best-effort URL prefill (Claude and Gemini support ?q=, ChatGPT does not)
+  const summary    = conv.map(m => `${m.role === 'user' ? 'You' : svc.name}:\n${m.content}`).join('\n\n---\n\n');
   let url = svc.openUrl;
-  if (svcId === 'claude' || svcId === 'gemini') {
-    url += '?q=' + encodeURIComponent(lastPrompt);
-  }
-
+  if (svcId === 'claude' || svcId === 'gemini') url += '?q=' + encodeURIComponent(lastPrompt);
   navigator.clipboard.writeText(summary)
-    .then(() => toast(`Conversation copied to clipboard — opening ${svc.name}…`, 3500))
+    .then(() => toast(`Conversation copied — opening ${svc.name}…`, 3500))
     .catch(() => toast(`Opening ${svc.name}…`));
-
   window.open(url, '_blank');
 }
 
@@ -1105,18 +1036,12 @@ function openConfig() {
   document.getElementById('openaiModel').value = c.openaiModel || 'gpt-4o';
   document.getElementById('configModal').classList.add('open');
 }
-
-function closeConfig() {
-  document.getElementById('configModal').classList.remove('open');
-}
+function closeConfig() { document.getElementById('configModal').classList.remove('open'); }
 
 document.getElementById('configBtn').addEventListener('click', openConfig);
 document.getElementById('closeConfig').addEventListener('click', closeConfig);
 document.getElementById('cancelConfig').addEventListener('click', closeConfig);
-
-document.getElementById('configModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('configModal')) closeConfig();
-});
+document.getElementById('configModal').addEventListener('click', e => { if (e.target === document.getElementById('configModal')) closeConfig(); });
 
 document.getElementById('saveConfig').addEventListener('click', () => {
   const c = {
@@ -1128,69 +1053,54 @@ document.getElementById('saveConfig').addEventListener('click', () => {
     openaiModel: document.getElementById('openaiModel').value,
   };
   Object.keys(c).forEach(k => { if (!c[k]) delete c[k]; });
-  saveCfg(c);
-  closeConfig();
-  refreshStatus();
-  toast('Configuration saved');
+  saveCfg(c); closeConfig(); refreshStatus(); toast('Configuration saved');
 });
 
 document.getElementById('clearConfig').addEventListener('click', () => {
   if (!confirm('Remove all saved API keys?')) return;
   localStorage.removeItem('polychat_v2');
   ['claudeKey','geminiKey','openaiKey'].forEach(id => document.getElementById(id).value = '');
-  closeConfig();
-  refreshStatus();
-  toast('Keys cleared');
+  closeConfig(); refreshStatus(); toast('Keys cleared');
 });
 
-// ── Send button / keyboard shortcuts ─────────────────────────────────
-document.getElementById('sendBtn').addEventListener('click', sendAll);
+// ── Reset button ──────────────────────────────────────────────────────
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (completionOrder.length || Object.keys(broadcastResults).length) {
+    if (!confirm('Start a new chat? This clears all current responses.')) return;
+  }
+  resetApp();
+});
 
+// ── Send / keyboard ───────────────────────────────────────────────────
+document.getElementById('sendBtn').addEventListener('click', sendAll);
 document.getElementById('promptInput').addEventListener('keydown', e => {
   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); sendAll(); }
 });
-
 document.getElementById('promptInput').addEventListener('input', function () {
   this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 280) + 'px';
+  this.style.height = Math.min(this.scrollHeight, 260) + 'px';
 });
 
 // ── Theme ─────────────────────────────────────────────────────────────
-const SUN_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-  <circle cx="12" cy="12" r="5"/>
-  <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-  <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-</svg>`;
-const MOON_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-</svg>`;
+const SUN_SVG  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const MOON_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
 
 function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('polychat_theme', t);
   document.getElementById('themeBtn').innerHTML = t === 'dark' ? SUN_SVG : MOON_SVG;
-  const hljsLink = document.getElementById('hljs-theme');
-  if (hljsLink) hljsLink.disabled = (t === 'light');
+  const l = document.getElementById('hljs-theme');
+  if (l) l.disabled = (t === 'light');
 }
-
 document.getElementById('themeBtn').addEventListener('click', () => {
   applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
 
 // ── Init ──────────────────────────────────────────────────────────────
-if (typeof marked !== 'undefined') {
-  marked.setOptions({ breaks: true, gfm: true });
-}
-
-const savedTheme = localStorage.getItem('polychat_theme') || 'dark';
-applyTheme(savedTheme);
+if (typeof marked !== 'undefined') marked.setOptions({ breaks: true, gfm: true });
+applyTheme(localStorage.getItem('polychat_theme') || 'dark');
 refreshStatus();
-
-if (!activeServices().length) {
-  setTimeout(openConfig, 400);
-}
+if (!activeServices().length) setTimeout(openConfig, 400);
 </script>
 </body>
 </html>
