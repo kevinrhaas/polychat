@@ -17,9 +17,10 @@
       --text:      #e8e8f2;
       --text-2:    #8888aa;
       --text-3:    #4a4a6a;
-      --claude:    #d4773b;
-      --gemini:    #4285f4;
-      --openai:    #10a37f;
+      --claude:     #d4773b;
+      --gemini:     #4285f4;
+      --openai:     #10a37f;
+      --consensus:  #9333ea;
       --radius:    12px;
       --radius-sm: 8px;
     }
@@ -362,7 +363,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span> <span style="font-size:11px;font-weight:400;color:var(--text-3);letter-spacing:0">v2026-06-04 15:45</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span> <span style="font-size:11px;font-weight:400;color:var(--text-3);letter-spacing:0">v2026-06-04 16:20</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="themeBtn" title="Toggle theme">
       <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -520,6 +521,11 @@ function activeServices() {
 // ── Conversation state ────────────────────────────────────────────────
 const convos = { claude: [], gemini: [], openai: [] };
 
+// ── Consensus state ───────────────────────────────────────────────────
+let lastBroadcastPrompt = '';
+let broadcastResults   = {};  // { svcId: text | null }
+let completionOrder    = [];  // svcIds in order of completion
+
 // ── Toast ─────────────────────────────────────────────────────────────
 let toastTimer;
 function toast(msg, dur = 2800) {
@@ -598,15 +604,41 @@ function ensureTabs() {
     panels.appendChild(panel);
   });
 
+  // Consensus tab — always added last, only once
+  if (!document.getElementById('tab_consensus')) {
+    const btn = document.createElement('button');
+    btn.className = 'tab';
+    btn.id = 'tab_consensus';
+    btn.setAttribute('data-svc', 'consensus');
+    btn.onclick = () => switchTab('consensus');
+    btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>Consensus`;
+    tabBar.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    panel.id = 'panel_consensus';
+    panel.innerHTML = `
+      <div class="conversation" id="conv_consensus">
+        <div class="empty-state" id="empty_consensus">
+          <div class="empty-icon" style="font-size:28px;background:linear-gradient(135deg,var(--claude),var(--gemini),var(--openai));-webkit-background-clip:text;-webkit-text-fill-color:transparent">✦</div>
+          <div id="consensus-status">Consensus will appear here after all models respond</div>
+        </div>
+      </div>`;
+    panels.appendChild(panel);
+  }
+
   if (!activeTab && services.length) switchTab(services[0]);
 }
 
 function switchTab(id) {
   activeTab = id;
+  const color = id === 'consensus' ? 'var(--consensus)' : SVC[id]?.color;
   document.querySelectorAll('.tab').forEach(t => {
     const isActive = t.getAttribute('data-svc') === id;
     t.classList.toggle('active', isActive);
-    t.style.borderBottomColor = isActive ? SVC[id].color : 'transparent';
+    t.style.borderBottomColor = isActive ? color : 'transparent';
+    if (isActive) t.style.color = 'var(--text)';
+    else t.style.color = '';
   });
   document.querySelectorAll('.tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === 'panel_' + id);
@@ -818,12 +850,13 @@ async function streamTo(svcId, userContent) {
     }
 
     convos[svcId].push({ role: 'assistant', content: full });
+    return full;
 
   } catch (err) {
     removeThinking(svcId);
     appendMsg(svcId, 'assistant', `Error: ${err.message}`, true);
-    // Pop the user message we added on failure so retry is clean
     convos[svcId].pop();
+    return null;
   } finally {
     setReplyDisabled(svcId, false);
   }
@@ -844,6 +877,10 @@ async function sendAll() {
   const services = activeServices();
   if (!services.length) { openConfig(); return; }
 
+  lastBroadcastPrompt = text;
+  broadcastResults    = {};
+  completionOrder     = [];
+
   document.getElementById('promptInput').value = '';
   document.getElementById('promptInput').style.height = 'auto';
   document.getElementById('sendBtn').disabled = true;
@@ -853,9 +890,169 @@ async function sendAll() {
 
   services.forEach(id => appendMsg(id, 'user', text));
 
-  await Promise.allSettled(services.map(id => streamTo(id, text)));
+  // Consensus: start spinner and waiting message
+  setConsensusStatus('Waiting for models to respond…');
+  setConsensusDot(true);
+
+  // Fire all services in parallel; track order of completion
+  await Promise.allSettled(services.map(async id => {
+    const result = await streamTo(id, text);
+    completionOrder.push(id);
+    broadcastResults[id] = result; // null if errored
+  }));
+
+  // All settled — run consensus synthesis
+  await runConsensus();
 
   document.getElementById('sendBtn').disabled = false;
+}
+
+// ── Consensus helpers ─────────────────────────────────────────────────
+function setConsensusStatus(msg) {
+  const el = document.getElementById('consensus-status');
+  if (el) el.textContent = msg;
+}
+
+function setConsensusDot(loading) {
+  const dot = document.getElementById('tdot_consensus');
+  if (!dot) return;
+  if (loading) {
+    dot.classList.add('loading');
+  } else {
+    dot.classList.remove('loading');
+    dot.classList.add('done');
+    setTimeout(() => dot.classList.remove('done'), 350);
+  }
+}
+
+// Silent API call — collects full text with no UI updates
+async function getSilentText(svcId, messages) {
+  const cfg = loadCfg();
+  let text = '';
+  let gen;
+  if (svcId === 'claude')      gen = apiClaude(messages, cfg);
+  else if (svcId === 'gemini') gen = apiGemini(messages, cfg);
+  else                         gen = apiOpenAI(messages, cfg);
+  for await (const chunk of gen) text += chunk;
+  return text;
+}
+
+// Stream the final synthesis into the Consensus tab
+async function streamToConsensusTab(svcId, messages) {
+  const cfg = loadCfg();
+  const conv = document.getElementById('conv_consensus');
+
+  // Clear empty/status state
+  conv.innerHTML = '';
+
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = `<span class="msg-label">Consensus</span><div class="msg-bubble" id="consensus-bubble"></div>`;
+  conv.appendChild(el);
+  const bubble = document.getElementById('consensus-bubble');
+
+  let fullText = '';
+  let gen;
+  if (svcId === 'claude')      gen = apiClaude(messages, cfg);
+  else if (svcId === 'gemini') gen = apiGemini(messages, cfg);
+  else                         gen = apiOpenAI(messages, cfg);
+
+  for await (const chunk of gen) {
+    fullText += chunk;
+    bubble.innerHTML = renderMarkdown(fullText);
+    conv.scrollTop = conv.scrollHeight;
+  }
+
+  if (!fullText) bubble.textContent = '(no response)';
+  else bubble.querySelectorAll('pre code').forEach(b => {
+    if (typeof hljs !== 'undefined') hljs.highlightElement(b);
+  });
+
+  return fullText;
+}
+
+// Show a static (non-streamed) result in the Consensus tab
+function showConsensusStatic(text, isError = false) {
+  const conv = document.getElementById('conv_consensus');
+  conv.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = isError
+    ? `<span class="msg-label">Consensus</span><div class="msg-bubble"><span class="msg-error">${text}</span></div>`
+    : `<span class="msg-label">Consensus</span><div class="msg-bubble">${renderMarkdown(text)}</div>`;
+  conv.appendChild(el);
+  if (!isError) el.querySelectorAll('pre code').forEach(b => {
+    if (typeof hljs !== 'undefined') hljs.highlightElement(b);
+  });
+}
+
+// ── Consensus orchestration ───────────────────────────────────────────
+async function runConsensus() {
+  // Only work with services that returned non-empty text
+  const ordered = completionOrder.filter(id => broadcastResults[id]);
+
+  if (ordered.length === 0) {
+    setConsensusDot(false);
+    showConsensusStatic('All models failed to respond — no consensus available.', true);
+    return;
+  }
+
+  if (ordered.length === 1) {
+    // One response: use it directly
+    setConsensusDot(false);
+    showConsensusStatic(broadcastResults[ordered[0]]);
+    return;
+  }
+
+  const [first, second, third] = ordered;
+
+  const step1Prompt = `${SVC[second].name} provided the following response to the same question:\n\n${broadcastResults[second]}\n\nPlease review this response and incorporate any valuable additions, then make any corrections or adjustments to your answer to produce the best possible result.`;
+
+  const step1Messages = [
+    { role: 'user',      content: lastBroadcastPrompt },
+    { role: 'assistant', content: broadcastResults[first] },
+    { role: 'user',      content: step1Prompt },
+  ];
+
+  if (!third) {
+    // ── 2-model path: stream step 1 directly as final consensus ──────
+    setConsensusStatus(`${SVC[first].name} synthesizing final answer…`);
+    try {
+      await streamToConsensusTab(first, step1Messages);
+    } catch {
+      showConsensusStatic(broadcastResults[first]);
+    }
+    setConsensusDot(false);
+    return;
+  }
+
+  // ── 3-model path ──────────────────────────────────────────────────
+  // Step 1: silent — first model reviews second's response
+  setConsensusStatus(`${SVC[first].name} reviewing ${SVC[second].name}'s response…`);
+  let synthesis = broadcastResults[first]; // fallback if step 1 errors
+  try {
+    synthesis = await getSilentText(first, step1Messages);
+  } catch { /* use fallback */ }
+
+  // Step 2: third model gets the synthesis + its own response → streams to tab
+  setConsensusStatus(`${SVC[third].name} producing final consensus…`);
+
+  const step2Prompt = `${SVC[first].name} and ${SVC[second].name} synthesized the following response:\n\n${synthesis}\n\nPlease review this synthesized response and incorporate any valuable additions or corrections from your own analysis to produce the definitive best possible final answer.`;
+
+  const step2Messages = [
+    { role: 'user',      content: lastBroadcastPrompt },
+    { role: 'assistant', content: broadcastResults[third] },
+    { role: 'user',      content: step2Prompt },
+  ];
+
+  try {
+    await streamToConsensusTab(third, step2Messages);
+  } catch {
+    // Final step failed — fall back to step 1 synthesis
+    showConsensusStatic(synthesis);
+  }
+
+  setConsensusDot(false);
 }
 
 // ── Per-service reply ─────────────────────────────────────────────────
