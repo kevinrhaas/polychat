@@ -37,7 +37,6 @@
     [data-theme="light"] #hljs-theme { display: none; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
       background: var(--bg); color: var(--text);
@@ -70,19 +69,13 @@
     .icon-btn svg { pointer-events: none; flex-shrink: 0; }
     .icon-btn.icon-only { padding: 0; width: 32px; }
 
-    /* ── App shell ──────────────────────────────────────────────────── */
+    /* ── App ────────────────────────────────────────────────────────── */
     .app {
       max-width: 1100px; margin: 0 auto;
       padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
     }
 
-    .no-config-hint { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
-    .no-config-hint button {
-      background: none; border: none; color: var(--gemini);
-      font-size: 13px; cursor: pointer; padding: 0; text-decoration: underline;
-    }
-
-    /* ── Prompt area ────────────────────────────────────────────────── */
+    /* ── Prompt card ────────────────────────────────────────────────── */
     .prompt-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); overflow: hidden; transition: border-color .15s;
@@ -94,17 +87,51 @@
       padding: 14px; resize: none; min-height: 90px; outline: none;
     }
     .prompt-input::placeholder { color: var(--text-3); font-size: 13px; }
+
+    /* Footer: model chips on left, send button on right */
     .prompt-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 12px; border-top: 1px solid var(--border); gap: 10px;
+      display: flex; align-items: center;
+      padding: 8px 10px; border-top: 1px solid var(--border); gap: 8px;
     }
-    .prompt-targets { font-size: 11px; color: var(--text-3); flex: 1; }
+
+    /* ── Model chips ────────────────────────────────────────────────── */
+    .model-chips {
+      display: flex; gap: 5px; flex: 1; min-width: 0;
+      overflow-x: auto; scrollbar-width: none; align-items: center;
+    }
+    .model-chips::-webkit-scrollbar { display: none; }
+
+    .m-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 8px; border-radius: 100px;
+      border: 1px solid var(--border);
+      font-size: 11px; white-space: nowrap; cursor: pointer;
+      color: var(--text-2); flex-shrink: 0; position: relative;
+      transition: border-color .15s;
+    }
+    .m-chip:hover { border-color: var(--text-3); }
+    .m-chip-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--c, #888); flex-shrink: 0; }
+    .m-chip-label { color: var(--text-2); }
+    .m-chip-chev { font-size: 7px; color: var(--text-3); }
+    /* Invisible select covers the whole chip */
+    .m-chip-select {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; border: none;
+    }
+    .m-chip.disabled { opacity: .45; pointer-events: none; }
+
+    .no-config-hint { font-size: 11px; color: var(--text-3); }
+    .no-config-hint button {
+      background: none; border: none; color: var(--gemini);
+      font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline;
+    }
+
     .send-btn {
       display: flex; align-items: center; gap: 6px;
       background: var(--text); color: var(--bg); border: none;
       border-radius: var(--radius-sm); padding: 8px 16px;
       font-family: inherit; font-size: 13px; font-weight: 700;
-      cursor: pointer; transition: opacity .15s; white-space: nowrap;
+      cursor: pointer; transition: opacity .15s; white-space: nowrap; flex-shrink: 0;
     }
     .send-btn:hover { opacity: .82; }
     .send-btn:disabled { opacity: .35; cursor: not-allowed; }
@@ -121,18 +148,18 @@
     }
     .tab-bar::-webkit-scrollbar { display: none; }
 
-    /* ── Tabs — two-line layout with embedded model selector ─────────── */
+    /* Simple tabs — navigation + status dot only */
     .tab {
       display: flex; align-items: center; gap: 6px;
-      padding: 8px 12px;
-      font-family: inherit; background: none; border: none;
-      border-bottom: 2px solid transparent;
+      padding: 10px 16px;
+      font-family: inherit; font-size: 12px; font-weight: 600;
+      background: none; border: none; border-bottom: 2px solid transparent;
       cursor: pointer; color: var(--text-2); white-space: nowrap; flex-shrink: 0;
       transition: color .15s, border-color .15s;
-      text-align: left;
     }
     .tab.active { color: var(--text); }
 
+    /* Tab dot + spinner */
     .tab-dot {
       width: 7px; height: 7px; border-radius: 50%;
       flex-shrink: 0; position: relative;
@@ -152,27 +179,9 @@
     @-webkit-keyframes pop { 0% { -webkit-transform: scale(1); } 40% { -webkit-transform: scale(1.6); } 100% { -webkit-transform: scale(1); } }
     @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.6); } 100% { transform: scale(1); } }
 
-    /* Two-line tab label */
-    .tab-label { display: flex; flex-direction: column; gap: 2px; }
-    .tab-name  { font-size: 12px; font-weight: 600; line-height: 1; }
-
-    /* Model selector row inside tab */
-    .tab-model-wrap {
-      position: relative; display: inline-flex; align-items: center; gap: 2px;
-    }
-    .tab-model {
-      font-size: 9px; color: var(--text-3); line-height: 1;
-      pointer-events: none; /* clicks fall through to the select */
-    }
-    .tab-chevron { font-size: 7px; color: var(--text-3); pointer-events: none; }
-    /* Invisible select sits over the model name */
-    .tab-model-select {
-      position: absolute; inset: 0;
-      opacity: 0; cursor: pointer;
-      width: 100%; height: 100%; border: none; background: none;
-    }
-    /* Consensus step text — same slot, no select */
-    .tab-step { font-size: 9px; color: var(--text-3); line-height: 1; min-height: 10px; }
+    /* Consensus step text under the tab name */
+    .tab-step { font-size: 9px; color: var(--text-3); display: block; line-height: 1; margin-top: 1px; min-height: 10px; }
+    .tab-inner { display: flex; flex-direction: column; gap: 0; }
 
     /* ── Conversation ───────────────────────────────────────────────── */
     .tab-panel { display: none; flex-direction: column; }
@@ -180,7 +189,7 @@
     .conversation {
       flex: 1; overflow-y: auto;
       padding: 16px; display: flex; flex-direction: column; gap: 0;
-      height: min(560px, calc(100vh - 320px)); min-height: 260px;
+      height: min(560px, calc(100vh - 300px)); min-height: 260px;
       scrollbar-width: thin; scrollbar-color: var(--border) transparent;
     }
     .conversation::-webkit-scrollbar { width: 4px; }
@@ -317,19 +326,18 @@
     @media (max-width: 600px) {
       .app { padding: 10px; gap: 10px; }
       header { padding: 10px 12px; }
-      .conversation { height: min(400px, calc(100vh - 290px)); }
+      .conversation { height: min(420px, calc(100vh - 280px)); }
       .msg-bubble { max-width: 98%; font-size: 13px; }
       .send-btn kbd { display: none; }
       .modal-body { padding: 14px; gap: 20px; }
-      .tab { padding: 7px 10px; gap: 5px; }
+      .tab { padding: 9px 12px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 20:30</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 21:00</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -351,13 +359,13 @@
   </div>
 </header>
 
-<!-- ── App ──────────────────────────────────────────────────────────── -->
 <div class="app">
   <div class="prompt-card">
     <textarea class="prompt-input" id="promptInput"
       placeholder="Type your prompt — sent to all configured models simultaneously&#10;&#10;⌘↵ or Ctrl↵ to send"></textarea>
     <div class="prompt-footer">
-      <span class="prompt-targets" id="promptTargets"></span>
+      <!-- Model chips — one per configured service -->
+      <div class="model-chips" id="modelChips"></div>
       <button class="send-btn" id="sendBtn" disabled>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -373,7 +381,7 @@
   </div>
 </div>
 
-<!-- ── Config modal ──────────────────────────────────────────────────── -->
+<!-- Config modal -->
 <div class="backdrop" id="configModal">
   <div class="modal" role="dialog" aria-modal="true" aria-label="API Configuration">
     <div class="modal-head">
@@ -463,7 +471,6 @@
 <script>
 'use strict';
 
-// ── Service definitions ───────────────────────────────────────────────
 const SVC = {
   claude: { name: 'Claude', tabLabel: 'Claude', color: '#d4773b', openUrl: 'https://claude.ai/new' },
   gemini: { name: 'Gemini', tabLabel: 'Gemini', color: '#4285f4', openUrl: 'https://gemini.google.com/app' },
@@ -491,17 +498,16 @@ const MODEL_OPTIONS = {
     { value: 'gemini-2.0-flash-lite',     label: '2.0 Lite'   },
   ],
   openai: [
-    { value: 'gpt-5.5',                   label: 'GPT-5.5'    },
-    { value: 'gpt-5.4',                   label: 'GPT-5.4'    },
-    { value: 'gpt-5.4-mini',              label: '5.4 mini'   },
-    { value: 'gpt-4o',                    label: 'GPT-4o'     },
-    { value: 'gpt-4o-mini',              label: '4o mini'    },
+    { value: 'gpt-5.5',     label: 'GPT-5.5'  },
+    { value: 'gpt-5.4',     label: 'GPT-5.4'  },
+    { value: 'gpt-5.4-mini',label: '5.4 mini' },
+    { value: 'gpt-4o',      label: 'GPT-4o'   },
+    { value: 'gpt-4o-mini', label: '4o mini'  },
   ],
 };
 
-function modelShort(svcId, modelValue) {
-  const opt = (MODEL_OPTIONS[svcId] || []).find(o => o.value === modelValue);
-  return opt ? opt.label : modelValue;
+function modelShort(svcId, val) {
+  return (MODEL_OPTIONS[svcId] || []).find(o => o.value === val)?.label || val;
 }
 
 // ── Config ────────────────────────────────────────────────────────────
@@ -521,60 +527,83 @@ let broadcastResults   = {};
 let completionOrder    = [];
 
 // ── Toast ─────────────────────────────────────────────────────────────
-let _toastTimer;
+let _tt;
 function toast(msg, dur = 2800) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+  clearTimeout(_tt); _tt = setTimeout(() => el.classList.remove('show'), dur);
 }
 
-// ── Status ────────────────────────────────────────────────────────────
-function refreshStatus() {
+// ── Model chips (prompt footer) ───────────────────────────────────────
+function buildModelChips() {
+  const row    = document.getElementById('modelChips');
   const active = activeServices();
+  const cfg    = loadCfg();
   const btn    = document.getElementById('sendBtn');
-  const tgt    = document.getElementById('promptTargets');
+
+  row.innerHTML = '';
+
   if (!active.length) {
-    tgt.innerHTML = `<span class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></span>`;
+    row.innerHTML = `<span class="no-config-hint">No services — <button onclick="openConfig()">add keys ⚙</button></span>`;
     btn.disabled = true;
     return;
   }
+
   btn.disabled = false;
-  tgt.textContent = `→ ${active.map(id => SVC[id].name).join(' · ')}`;
+
+  active.forEach(id => {
+    const curModel = cfg[id + 'Model'] || MODEL_OPTIONS[id][0].value;
+    const opts = MODEL_OPTIONS[id].map(o =>
+      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}</option>`
+    ).join('');
+
+    const chip = document.createElement('label');
+    chip.className = 'm-chip';
+    chip.id = 'mchip_' + id;
+    chip.style.setProperty('--c', SVC[id].color);
+    chip.innerHTML = `
+      <span class="m-chip-dot"></span>
+      <span class="m-chip-label" id="mclabel_${id}">${modelShort(id, curModel)}</span>
+      <span class="m-chip-chev">▾</span>
+      <select class="m-chip-select" onchange="onChipModelChange('${id}', this)">${opts}</select>`;
+    row.appendChild(chip);
+  });
 }
 
-// ── Tab management ────────────────────────────────────────────────────
+function onChipModelChange(svcId, sel) {
+  const cfg = loadCfg();
+  cfg[svcId + 'Model'] = sel.value;
+  saveCfg(cfg);
+  const el = document.getElementById('mclabel_' + svcId);
+  if (el) el.textContent = modelShort(svcId, sel.value);
+  // Sync config modal
+  const ms = document.getElementById(svcId + 'Model');
+  if (ms) ms.value = sel.value;
+}
+
+function setChipsDisabled(disabled) {
+  document.querySelectorAll('.m-chip').forEach(c => {
+    c.classList.toggle('disabled', disabled);
+  });
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────
 let activeTab = null;
 
 function ensureTabs() {
   const services = activeServices();
   const tabBar   = document.getElementById('tabBar');
   const panels   = document.getElementById('tabPanels');
-  const cfg      = loadCfg();
 
   services.forEach(id => {
     if (document.getElementById('tab_' + id)) return;
-
-    const curModel = cfg[id + 'Model'] || MODEL_OPTIONS[id][0].value;
-    const opts = MODEL_OPTIONS[id].map(o =>
-      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}</option>`
-    ).join('');
 
     const btn = document.createElement('button');
     btn.className = 'tab'; btn.id = 'tab_' + id; btn.setAttribute('data-svc', id);
     btn.onclick = () => switchTab(id);
     btn.innerHTML = `
       <span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>
-      <div class="tab-label">
-        <span class="tab-name">${SVC[id].tabLabel}</span>
-        <div class="tab-model-wrap">
-          <span class="tab-model" id="tmodel_${id}">${modelShort(id, curModel)}</span>
-          <span class="tab-chevron">▾</span>
-          <select class="tab-model-select"
-                  onclick="event.stopPropagation()"
-                  onchange="onTabModelChange('${id}', this)">${opts}</select>
-        </div>
-      </div>`;
+      ${SVC[id].tabLabel}`;
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
@@ -589,15 +618,14 @@ function ensureTabs() {
     panels.appendChild(panel);
   });
 
-  // Consensus tab — always last, only once
   if (!document.getElementById('tab_consensus')) {
     const btn = document.createElement('button');
     btn.className = 'tab'; btn.id = 'tab_consensus'; btn.setAttribute('data-svc', 'consensus');
     btn.onclick = () => switchTab('consensus');
     btn.innerHTML = `
       <span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>
-      <div class="tab-label">
-        <span class="tab-name">Consensus</span>
+      <div class="tab-inner">
+        Consensus
         <span class="tab-step" id="consensus-tab-step"></span>
       </div>`;
     tabBar.appendChild(btn);
@@ -617,16 +645,6 @@ function ensureTabs() {
   if (!activeTab && services.length) switchTab(services[0]);
 }
 
-function onTabModelChange(svcId, sel) {
-  const cfg = loadCfg();
-  cfg[svcId + 'Model'] = sel.value;
-  saveCfg(cfg);
-  const el = document.getElementById('tmodel_' + svcId);
-  if (el) el.textContent = modelShort(svcId, sel.value);
-  const ms = document.getElementById(svcId + 'Model');
-  if (ms) ms.value = sel.value;
-}
-
 function setConsensusTabStep(label) {
   const el = document.getElementById('consensus-tab-step');
   if (el) el.textContent = label || '';
@@ -636,17 +654,17 @@ function switchTab(id) {
   activeTab = id;
   const color = id === 'consensus' ? 'var(--consensus)' : SVC[id]?.color;
   document.querySelectorAll('.tab').forEach(t => {
-    const isActive = t.getAttribute('data-svc') === id;
-    t.classList.toggle('active', isActive);
-    t.style.borderBottomColor = isActive ? color : 'transparent';
-    t.style.color = isActive ? 'var(--text)' : '';
+    const active = t.getAttribute('data-svc') === id;
+    t.classList.toggle('active', active);
+    t.style.borderBottomColor = active ? color : 'transparent';
+    t.style.color = active ? 'var(--text)' : '';
   });
   document.querySelectorAll('.tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === 'panel_' + id);
   });
 }
 
-// ── Markdown / highlight ──────────────────────────────────────────────
+// ── Markdown ──────────────────────────────────────────────────────────
 function renderMarkdown(text) {
   if (typeof marked === 'undefined')
     return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
@@ -667,8 +685,8 @@ async function* sseReader(response, extract) {
     buf += dec.decode(value, { stream: true });
     const lines = buf.split('\n'); buf = lines.pop() ?? '';
     for (const line of lines) {
-      if (line.startsWith('event:')) { evtName = line.slice(6).trim(); }
-      else if (line.startsWith('data:')) {
+      if (line.startsWith('event:'))      { evtName = line.slice(6).trim(); }
+      else if (line.startsWith('data:'))  {
         const raw = line.slice(5).trim();
         if (raw === '[DONE]') return;
         try { const d = JSON.parse(raw); const c = extract(evtName, d); if (c) yield c; } catch {}
@@ -734,7 +752,7 @@ function makeGen(svcId, messages, cfg) {
   return apiOpenAI(messages, cfg);
 }
 
-// ── Stream to service tab ─────────────────────────────────────────────
+// ── Stream to tab ─────────────────────────────────────────────────────
 async function streamTo(svcId, userContent) {
   const cfg   = loadCfg();
   convos[svcId].push({ role: 'user', content: userContent });
@@ -760,12 +778,6 @@ async function streamTo(svcId, userContent) {
   const dot = document.getElementById('tdot_' + svcId);
   if (dot) dot.classList.add('loading');
 
-  // Disable model selector during broadcast
-  const sel = document.querySelector(`#tab_${svcId} .tab-model-select`);
-  if (sel) sel.disabled = true;
-  const chev = document.querySelector(`#tab_${svcId} .tab-chevron`);
-  if (chev) chev.style.display = 'none';
-
   const bubble = document.getElementById('mbubble_' + svcId);
   let full = '';
 
@@ -786,13 +798,10 @@ async function streamTo(svcId, userContent) {
     return null;
   } finally {
     if (dot) { dot.classList.remove('loading'); dot.classList.add('done'); setTimeout(() => dot.classList.remove('done'), 350); }
-    // Re-enable model selector
-    if (sel) sel.disabled = false;
-    if (chev) chev.style.display = '';
   }
 }
 
-// ── Broadcast send ────────────────────────────────────────────────────
+// ── Broadcast ─────────────────────────────────────────────────────────
 async function sendAll() {
   const text     = document.getElementById('promptInput').value.trim();
   if (!text) return;
@@ -808,10 +817,10 @@ async function sendAll() {
   document.getElementById('sendBtn').disabled = true;
   document.getElementById('responses').style.display = '';
 
+  setChipsDisabled(true);
   ensureTabs();
 
-  let step1Started = false;
-  let step1Promise = null;
+  let step1Started = false, step1Promise = null;
 
   await Promise.allSettled(services.map(async id => {
     const result = await streamTo(id, text);
@@ -835,46 +844,39 @@ async function sendAll() {
     }
   }));
 
-  if (!step1Started) {
-    setConsensusDot(true);
-  }
+  if (!step1Started) setConsensusDot(true);
 
   await runConsensus(step1Promise);
 
   setConsensusDot(false);
   setConsensusTabStep('');
+  setChipsDisabled(false);
   document.getElementById('sendBtn').disabled = false;
 }
 
 // ── Reset ─────────────────────────────────────────────────────────────
 function resetApp() {
   Object.keys(convos).forEach(id => convos[id] = []);
-  lastBroadcastPrompt = '';
-  broadcastResults = {};
-  completionOrder  = [];
+  lastBroadcastPrompt = ''; broadcastResults = {}; completionOrder = [];
 
   document.querySelectorAll('.conversation').forEach(conv => {
     const svcId = conv.id.replace('conv_', '');
-    const label = svcId === 'consensus'
-      ? 'Consensus will appear here after all models respond'
+    const isConsensus = svcId === 'consensus';
+    const label = isConsensus ? 'Consensus will appear here after all models respond'
       : `Send a prompt to see ${SVC[svcId]?.name || svcId}'s response`;
-    const icon = svcId === 'consensus'
+    const icon = isConsensus
       ? `<div class="empty-icon" style="font-size:26px;background:linear-gradient(135deg,var(--claude),var(--gemini),var(--openai));-webkit-background-clip:text;-webkit-text-fill-color:transparent">✦</div>`
       : `<div class="empty-icon">◎</div>`;
-    conv.innerHTML = `<div class="empty-state" id="empty_${svcId}">${icon}<div id="${svcId === 'consensus' ? 'consensus-status' : ''}">${label}</div></div>`;
+    conv.innerHTML = `<div class="empty-state" id="empty_${svcId}">${icon}<div id="${isConsensus ? 'consensus-status' : ''}">${label}</div></div>`;
   });
 
   document.querySelectorAll('.tab-dot').forEach(d => d.classList.remove('loading', 'done'));
   setConsensusTabStep('');
-
-  // Re-enable all model selects and chevrons
-  document.querySelectorAll('.tab-model-select').forEach(s => s.disabled = false);
-  document.querySelectorAll('.tab-chevron').forEach(c => c.style.display = '');
-
+  setChipsDisabled(false);
   document.getElementById('promptInput').focus();
 }
 
-// ── Consensus helpers ─────────────────────────────────────────────────
+// ── Consensus ─────────────────────────────────────────────────────────
 function setConsensusStatus(msg) {
   const el = document.getElementById('consensus-status');
   if (el) el.textContent = msg;
@@ -888,15 +890,14 @@ function setConsensusDot(loading) {
 }
 
 async function getSilentText(svcId, messages) {
-  const cfg = loadCfg();
-  let text = '';
+  const cfg = loadCfg(); let text = '';
   for await (const chunk of makeGen(svcId, messages, cfg)) text += chunk;
   return text;
 }
 
 async function streamToConsensusTab(svcId, messages) {
-  const cfg   = loadCfg();
-  const conv  = document.getElementById('conv_consensus');
+  const cfg  = loadCfg();
+  const conv = document.getElementById('conv_consensus');
   const empty = document.getElementById('empty_consensus');
   if (empty) empty.remove();
 
@@ -909,8 +910,7 @@ async function streamToConsensusTab(svcId, messages) {
       <span class="msg-label">Consensus</span>
       <div class="msg-bubble" id="consensus-bubble"></div>
     </div>`;
-  conv.prepend(pair);
-  conv.scrollTop = 0;
+  conv.prepend(pair); conv.scrollTop = 0;
 
   const bubble = document.getElementById('consensus-bubble');
   let fullText = '';
@@ -941,18 +941,11 @@ function showConsensusStatic(text, isError = false) {
   if (!isError) highlightBubble(pair);
 }
 
-// ── Consensus orchestration ───────────────────────────────────────────
 async function runConsensus(step1Promise = null) {
   const ordered = completionOrder.filter(id => broadcastResults[id]);
 
-  if (ordered.length === 0) {
-    showConsensusStatic('All models failed to respond — no consensus available.', true);
-    return;
-  }
-  if (ordered.length === 1) {
-    showConsensusStatic(broadcastResults[ordered[0]]);
-    return;
-  }
+  if (!ordered.length) { showConsensusStatic('All models failed to respond — no consensus available.', true); return; }
+  if (ordered.length === 1) { showConsensusStatic(broadcastResults[ordered[0]]); return; }
 
   const [first, second, third] = ordered;
 
@@ -971,11 +964,9 @@ async function runConsensus(step1Promise = null) {
   }
 
   setConsensusStatus('Reviewing perspectives…');
-
   let synthesis = broadcastResults[first];
-  try {
-    synthesis = step1Promise ? await step1Promise : await getSilentText(first, step1Messages);
-  } catch { /* use fallback */ }
+  try { synthesis = step1Promise ? await step1Promise : await getSilentText(first, step1Messages); }
+  catch { /* fallback */ }
 
   setConsensusStatus('Finalizing consensus…');
   setConsensusTabStep(`${SVC[third].tabLabel} finalizing`);
@@ -993,15 +984,13 @@ async function runConsensus(step1Promise = null) {
 // ── Open in service ───────────────────────────────────────────────────
 function openInService(svcId) {
   const conv = convos[svcId];
-  if (!conv.length) { toast('No conversation yet — send a prompt first'); return; }
-  const svc        = SVC[svcId];
+  if (!conv.length) { toast('No conversation yet'); return; }
+  const svc = SVC[svcId];
   const lastPrompt = [...conv].reverse().find(m => m.role === 'user')?.content ?? '';
-  const summary    = conv.map(m => `${m.role === 'user' ? 'You' : svc.name}:\n${m.content}`).join('\n\n---\n\n');
+  const summary = conv.map(m => `${m.role === 'user' ? 'You' : svc.name}:\n${m.content}`).join('\n\n---\n\n');
   let url = svc.openUrl;
   if (svcId === 'claude' || svcId === 'gemini') url += '?q=' + encodeURIComponent(lastPrompt);
-  navigator.clipboard.writeText(summary)
-    .then(() => toast(`Conversation copied — opening ${svc.name}…`, 3500))
-    .catch(() => toast(`Opening ${svc.name}…`));
+  navigator.clipboard.writeText(summary).then(() => toast(`Copied — opening ${svc.name}…`, 3500)).catch(() => {});
   window.open(url, '_blank');
 }
 
@@ -1035,24 +1024,19 @@ document.getElementById('saveConfig').addEventListener('click', () => {
     openaiModel: document.getElementById('openaiModel').value,
   };
   Object.keys(c).forEach(k => { if (!c[k]) delete c[k]; });
-  saveCfg(c); closeConfig(); refreshStatus(); toast('Configuration saved');
-  // Sync tab model labels
-  activeServices().forEach(id => {
-    const el = document.getElementById('tmodel_' + id);
-    if (el) el.textContent = modelShort(id, c[id + 'Model'] || MODEL_OPTIONS[id][0].value);
-    const ts = document.querySelector(`#tab_${id} .tab-model-select`);
-    if (ts) ts.value = c[id + 'Model'] || MODEL_OPTIONS[id][0].value;
-  });
+  saveCfg(c); closeConfig();
+  buildModelChips();  // Rebuild chips with new models/keys
+  toast('Configuration saved');
 });
 
 document.getElementById('clearConfig').addEventListener('click', () => {
   if (!confirm('Remove all saved API keys?')) return;
   localStorage.removeItem('polychat_v2');
   ['claudeKey','geminiKey','openaiKey'].forEach(id => document.getElementById(id).value = '');
-  closeConfig(); refreshStatus(); toast('Keys cleared');
+  closeConfig(); buildModelChips(); toast('Keys cleared');
 });
 
-// ── Reset button ──────────────────────────────────────────────────────
+// ── Reset ─────────────────────────────────────────────────────────────
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (completionOrder.length || Object.keys(broadcastResults).length) {
     if (!confirm('Start a new chat? This clears all current responses.')) return;
@@ -1071,13 +1055,13 @@ document.getElementById('promptInput').addEventListener('input', function () {
 });
 
 // ── Theme ─────────────────────────────────────────────────────────────
-const SUN_SVG  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
-const MOON_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+const SUN  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const MOON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
 
 function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('polychat_theme', t);
-  document.getElementById('themeBtn').innerHTML = t === 'dark' ? SUN_SVG : MOON_SVG;
+  document.getElementById('themeBtn').innerHTML = t === 'dark' ? SUN : MOON;
   const l = document.getElementById('hljs-theme');
   if (l) l.disabled = (t === 'light');
 }
@@ -1088,7 +1072,7 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 // ── Init ──────────────────────────────────────────────────────────────
 if (typeof marked !== 'undefined') marked.setOptions({ breaks: true, gfm: true });
 applyTheme(localStorage.getItem('polychat_theme') || 'dark');
-refreshStatus();
+buildModelChips();
 if (!activeServices().length) setTimeout(openConfig, 400);
 </script>
 </body>
