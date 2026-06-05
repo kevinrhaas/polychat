@@ -59,7 +59,6 @@
     }
     .logo-ver { font-size: 10px; font-weight: 400; color: var(--text-3); letter-spacing: 0; margin-left: 4px; }
     .header-actions { display: flex; gap: 6px; align-items: center; }
-
     .icon-btn {
       height: 32px; min-width: 32px;
       display: flex; align-items: center; justify-content: center; gap: 5px;
@@ -74,10 +73,93 @@
     /* ── App shell ──────────────────────────────────────────────────── */
     .app {
       max-width: 1100px; margin: 0 auto;
-      padding: 16px; display: flex; flex-direction: column; gap: 12px;
+      padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
     }
 
-    /* ── Service status ─────────────────────────────────────────────── */
+    /* ── Service / model selector pills ─────────────────────────────── */
+    .pill-row {
+      display: flex; gap: 7px; flex-wrap: nowrap; overflow-x: auto;
+      scrollbar-width: none; padding: 2px 0; align-items: center;
+    }
+    .pill-row::-webkit-scrollbar { display: none; }
+
+    /* Base pill — service selector */
+    .s-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 11px; border-radius: 100px;
+      border: 1px solid rgba(128,128,128,.25);
+      background: rgba(128,128,128,.07);
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      position: relative; user-select: none;
+      transition: border-color .2s, background .2s, opacity .2s;
+    }
+    /* Colored border/bg from --c set inline */
+    .s-pill:not(.running):not(.done):not(.error) {
+      border-color: var(--pill-border, rgba(128,128,128,.25));
+      background: var(--pill-bg, rgba(128,128,128,.07));
+    }
+    .s-pill.running {
+      border-color: var(--c, #888);
+      background: var(--pill-bg, rgba(128,128,128,.1));
+    }
+    .s-pill.done   { opacity: .6; }
+    .s-pill.error  { --c: #f87171; }
+
+    .s-pill-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--c, currentColor); flex-shrink: 0; position: relative;
+    }
+    /* Spinner on dot when running */
+    .s-pill-dot.loading::after {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid var(--c, #888); border-top-color: transparent;
+      -webkit-animation: tab-spin .65s linear infinite;
+      animation: tab-spin .65s linear infinite;
+    }
+
+    .s-pill-body { display: flex; flex-direction: column; gap: 1px; line-height: 1; }
+    .s-pill-name  { font-size: 12px; font-weight: 700; color: var(--c, var(--text-2)); }
+    .s-pill-model { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+    .s-pill-chevron { font-size: 9px; color: var(--text-3); line-height: 1; }
+
+    /* During broadcast: hide chevron, block select */
+    .s-pill.running .s-pill-chevron,
+    .s-pill.done    .s-pill-chevron,
+    .s-pill.error   .s-pill-chevron { display: none; }
+
+    /* Invisible select covers the whole pill — native picker on tap */
+    .s-pill-select {
+      position: absolute; inset: 0; opacity: 0;
+      width: 100%; height: 100%; cursor: pointer; border: none;
+    }
+    .s-pill.running .s-pill-select,
+    .s-pill.error   .s-pill-select { pointer-events: none; }
+
+    /* Consensus pill — not a selector, just a status indicator */
+    .c-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 11px; border-radius: 100px;
+      border: 1px solid rgba(147,51,234,.3); background: rgba(147,51,234,.08);
+      white-space: nowrap; flex-shrink: 0;
+      transition: border-color .2s, opacity .2s;
+    }
+    .c-pill.running { border-color: var(--consensus); }
+    .c-pill.done    { opacity: .6; }
+    .c-pill.error   { border-color: #f87171; }
+    .c-pill-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--consensus); flex-shrink: 0; position: relative;
+    }
+    .c-pill-dot.loading::after {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid var(--consensus); border-top-color: transparent;
+      -webkit-animation: tab-spin .65s linear infinite;
+      animation: tab-spin .65s linear infinite;
+    }
+    .c-pill-body  { display: flex; flex-direction: column; gap: 1px; line-height: 1; }
+    .c-pill-name  { font-size: 12px; font-weight: 700; color: var(--consensus); }
+    .c-pill-step  { font-size: 10px; color: var(--text-3); margin-top: 2px; min-height: 12px; }
+
     .no-config-hint { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
     .no-config-hint button {
       background: none; border: none; color: var(--gemini);
@@ -111,35 +193,6 @@
     .send-btn:hover { opacity: .82; }
     .send-btn:disabled { opacity: .35; cursor: not-allowed; }
     .send-btn kbd { font-family: inherit; font-size: 10px; opacity: .55; font-weight: 400; }
-
-    /* ── Progress bar ───────────────────────────────────────────────── */
-    .progress-row {
-      display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
-      scrollbar-width: none; padding: 2px 0;
-    }
-    .progress-row::-webkit-scrollbar { display: none; }
-    .prog-pill {
-      display: flex; align-items: center; gap: 4px;
-      padding: 4px 9px; border-radius: 100px; border: 1px solid var(--border);
-      font-size: 11px; font-weight: 600; white-space: nowrap;
-      color: var(--text-3); transition: color .25s, border-color .25s, background .25s;
-      flex-shrink: 0;
-    }
-    .prog-pill.running {
-      color: var(--c, #888); border-color: var(--c, #888);
-      background: color-mix(in srgb, var(--c, #888) 10%, transparent);
-    }
-    .prog-pill.done {
-      color: var(--c, #888); border-color: var(--c, #888); opacity: .65;
-    }
-    .prog-pill.error { color: #f87171; border-color: #f87171; opacity: .8; }
-    .prog-dot-sm {
-      width: 5px; height: 5px; border-radius: 50%; background: currentColor;
-    }
-    .prog-pill.running .prog-dot-sm {
-      -webkit-animation: bounce-dot 1s ease-in-out infinite;
-      animation: bounce-dot 1s ease-in-out infinite;
-    }
 
     /* ── Response panel ─────────────────────────────────────────────── */
     .responses {
@@ -192,7 +245,6 @@
     .conversation::-webkit-scrollbar { width: 4px; }
     .conversation::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    /* Q&A pair — newest first (prepended) */
     .qa-pair { display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px; }
     .qa-pair + .qa-pair { border-top: 1px solid var(--border); padding-top: 16px; }
 
@@ -239,11 +291,9 @@
     .msg.assistant .msg-bubble th { background: var(--surface-3); font-weight: 600; }
     .msg-error { color: #f87171; font-size: 13px; }
 
-    /* Loading dots */
     .loading-dots { display: flex; gap: 4px; padding: 6px 2px; }
     .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--text-3);
+      width: 6px; height: 6px; border-radius: 50%; background: var(--text-3);
       -webkit-animation: bounce-dot 1.2s ease-in-out infinite;
       animation: bounce-dot 1.2s ease-in-out infinite;
     }
@@ -338,7 +388,7 @@
 
 <!-- ── Header ───────────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 18:50</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 19:15</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -362,6 +412,10 @@
 
 <!-- ── App ──────────────────────────────────────────────────────────── -->
 <div class="app">
+
+  <!-- Service / model selector pills — always visible -->
+  <div class="pill-row" id="pillRow"></div>
+
   <div class="prompt-card">
     <textarea class="prompt-input" id="promptInput"
       placeholder="Type your prompt — sent to all configured models simultaneously&#10;&#10;⌘↵ or Ctrl↵ to send"></textarea>
@@ -375,9 +429,6 @@
       </button>
     </div>
   </div>
-
-  <!-- Progress bar (shown during broadcast) -->
-  <div class="progress-row" id="progressRow" style="display:none"></div>
 
   <div class="responses" id="responses" style="display:none">
     <div class="tab-bar" id="tabBar"></div>
@@ -448,7 +499,7 @@
         </div>
       </div>
       <div class="security-note">
-        🔒 Keys are stored in your browser's <strong>localStorage</strong> and never leave your device. Avoid shared/public computers.
+        🔒 Keys are stored in your browser's <strong>localStorage</strong> and never leave your device.
       </div>
     </div>
     <div class="modal-foot">
@@ -461,7 +512,6 @@
   </div>
 </div>
 
-<!-- ── Toast ─────────────────────────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -473,6 +523,33 @@ const SVC = {
   gemini: { name: 'Gemini', tabLabel: 'Gemini', color: '#4285f4', openUrl: 'https://gemini.google.com/app' },
   openai: { name: 'ChatGPT', tabLabel: 'GPT',   color: '#10a37f', openUrl: 'https://chatgpt.com/' },
 };
+
+// Model options per service
+const MODEL_OPTIONS = {
+  claude: [
+    { value: 'claude-sonnet-4-6',        label: 'Sonnet 4.6' },
+    { value: 'claude-opus-4-8',          label: 'Opus 4.8'   },
+    { value: 'claude-haiku-4-5-20251001',label: 'Haiku 4.5'  },
+  ],
+  gemini: [
+    { value: 'gemini-3.5-flash',         label: '3.5 Flash'  },
+    { value: 'gemini-3.1-pro-preview',   label: '3.1 Pro'    },
+    { value: 'gemini-3-flash-preview',   label: '3 Flash'    },
+    { value: 'gemini-3.1-flash-lite',    label: '3.1 Lite'   },
+  ],
+  openai: [
+    { value: 'gpt-4o',                   label: 'GPT-4o'     },
+    { value: 'gpt-4o-mini',              label: '4o mini'    },
+    { value: 'o4-mini',                  label: 'o4-mini'    },
+    { value: 'o3',                       label: 'o3'         },
+  ],
+};
+
+// Short display name for any model value
+function modelShort(svcId, modelValue) {
+  const opt = (MODEL_OPTIONS[svcId] || []).find(o => o.value === modelValue);
+  return opt ? opt.label : modelValue;
+}
 
 // ── Config ────────────────────────────────────────────────────────────
 function loadCfg() {
@@ -487,74 +564,132 @@ function activeServices() {
 
 // ── Conversation state ────────────────────────────────────────────────
 const convos = { claude: [], gemini: [], openai: [] };
-
-// ── Consensus state ───────────────────────────────────────────────────
 let lastBroadcastPrompt = '';
 let broadcastResults   = {};
 let completionOrder    = [];
 
 // ── Toast ─────────────────────────────────────────────────────────────
-let toastTimer;
+let _toastTimer;
 function toast(msg, dur = 2800) {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), dur);
 }
 
-// ── Status row ────────────────────────────────────────────────────────
+// ── Service pill row ──────────────────────────────────────────────────
+function buildPillRow() {
+  const row    = document.getElementById('pillRow');
+  const active = activeServices();
+  const cfg    = loadCfg();
+
+  // Preserve consensus pill if already there
+  const cpill = document.getElementById('cpill_consensus');
+  row.innerHTML = '';
+
+  if (!active.length) {
+    row.innerHTML = `<span class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></span>`;
+    return;
+  }
+
+  active.forEach(id => {
+    const curModel  = cfg[id + 'Model'] || MODEL_OPTIONS[id][0].value;
+    const shortName = modelShort(id, curModel);
+    const opts      = MODEL_OPTIONS[id].map(o =>
+      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}</option>`
+    ).join('');
+
+    // Compute CSS vars as rgba since color-mix may not work everywhere
+    const hex   = SVC[id].color;
+    const pill  = document.createElement('label');
+    pill.className  = 's-pill';
+    pill.id         = 'spill_' + id;
+    pill.style.setProperty('--c', hex);
+    pill.style.setProperty('--pill-border', hex + '55');
+    pill.style.setProperty('--pill-bg',     hex + '14');
+    pill.innerHTML  = `
+      <span class="s-pill-dot" id="spdot_${id}"></span>
+      <div class="s-pill-body">
+        <span class="s-pill-name">${SVC[id].name}</span>
+        <span class="s-pill-model" id="spm_${id}">${shortName}</span>
+      </div>
+      <span class="s-pill-chevron">▾</span>
+      <select class="s-pill-select" onchange="onPillModelChange('${id}', this)">${opts}</select>`;
+    row.appendChild(pill);
+  });
+
+  if (cpill) row.appendChild(cpill);
+}
+
+function onPillModelChange(svcId, sel) {
+  const cfg = loadCfg();
+  cfg[svcId + 'Model'] = sel.value;
+  saveCfg(cfg);
+  // Update short label in pill
+  const el = document.getElementById('spm_' + svcId);
+  if (el) el.textContent = modelShort(svcId, sel.value);
+  // Keep config modal in sync
+  const ms = document.getElementById(svcId + 'Model');
+  if (ms) ms.value = sel.value;
+}
+
+// Progress states for service pills ('running' | 'done' | 'error' | '')
+function setSvcPillState(id, state) {
+  const pill = document.getElementById('spill_' + id);
+  if (!pill) return;
+  pill.classList.remove('running', 'done', 'error');
+  if (state) pill.classList.add(state);
+  const dot = document.getElementById('spdot_' + id);
+  if (dot) {
+    if (state === 'running') dot.classList.add('loading');
+    else dot.classList.remove('loading');
+  }
+}
+
+// Consensus pill — appended to pill row during broadcast
+function ensureConsensusPill() {
+  if (document.getElementById('cpill_consensus')) return;
+  const row = document.getElementById('pillRow');
+  const cp  = document.createElement('div');
+  cp.className = 'c-pill';
+  cp.id        = 'cpill_consensus';
+  cp.innerHTML = `
+    <span class="c-pill-dot" id="cpdot_consensus"></span>
+    <div class="c-pill-body">
+      <span class="c-pill-name">Consensus</span>
+      <span class="c-pill-step" id="cpstep_consensus"></span>
+    </div>`;
+  row.appendChild(cp);
+}
+
+function setConsensusPillState(state, stepLabel) {
+  const cp = document.getElementById('cpill_consensus');
+  if (!cp) return;
+  cp.classList.remove('running', 'done', 'error');
+  if (state) cp.classList.add(state);
+  const dot = document.getElementById('cpdot_consensus');
+  if (dot) {
+    if (state === 'running') dot.classList.add('loading');
+    else dot.classList.remove('loading');
+  }
+  const step = document.getElementById('cpstep_consensus');
+  if (step && stepLabel !== undefined) step.textContent = stepLabel;
+}
+
+// ── refreshStatus (called after config change / init) ─────────────────
 function refreshStatus() {
   const active = activeServices();
   const btn    = document.getElementById('sendBtn');
   const tgt    = document.getElementById('promptTargets');
 
+  buildPillRow();
+
   if (!active.length) {
-    tgt.innerHTML = `<span class="no-config-hint">No services configured — <button onclick="openConfig()">add API keys ⚙</button></span>`;
-    btn.disabled = true;
+    btn.disabled = true; tgt.textContent = '';
     return;
   }
   btn.disabled = false;
   tgt.textContent = `→ ${active.map(id => SVC[id].name).join(' · ')}`;
-}
-
-// ── Progress bar ──────────────────────────────────────────────────────
-const PROG_SVCS = [...Object.keys(SVC), 'consensus'];
-const PROG_META = {
-  claude:    { label: 'Claude',    color: '#d4773b' },
-  gemini:    { label: 'Gemini',    color: '#4285f4' },
-  openai:    { label: 'GPT',       color: '#10a37f' },
-  consensus: { label: 'Consensus', color: '#9333ea' },
-};
-
-function initProgress(services) {
-  const row = document.getElementById('progressRow');
-  const all = [...services, 'consensus'];
-  row.innerHTML = all.map(id => {
-    const m = PROG_META[id];
-    return `<div class="prog-pill" id="prog_${id}" style="--c:${m.color}">
-      <span class="prog-dot-sm"></span>${m.label}
-    </div>`;
-  }).join('');
-  row.style.display = 'flex';
-}
-
-function setProgress(id, state, label) {
-  const el = document.getElementById('prog_' + id);
-  if (!el) return;
-  el.className = `prog-pill ${state}`;
-  el.style.setProperty('--c', PROG_META[id]?.color || '#888');
-  if (label) {
-    // Replace text node (last child) with new label
-    const dot = el.querySelector('.prog-dot-sm');
-    el.innerHTML = '';
-    el.appendChild(dot);
-    el.append(' ' + label);
-  }
-}
-
-function hideProgress() {
-  document.getElementById('progressRow').style.display = 'none';
 }
 
 // ── Tab management ────────────────────────────────────────────────────
@@ -567,18 +702,14 @@ function ensureTabs() {
 
   services.forEach(id => {
     if (document.getElementById('tab_' + id)) return;
-
     const btn = document.createElement('button');
-    btn.className = 'tab';
-    btn.id = 'tab_' + id;
-    btn.setAttribute('data-svc', id);
+    btn.className = 'tab'; btn.id = 'tab_' + id; btn.setAttribute('data-svc', id);
     btn.onclick = () => switchTab(id);
     btn.innerHTML = `<span class="tab-dot" id="tdot_${id}" style="background:${SVC[id].color};--dot-c:${SVC[id].color}"></span>${SVC[id].tabLabel}`;
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
-    panel.className = 'tab-panel';
-    panel.id = 'panel_' + id;
+    panel.className = 'tab-panel'; panel.id = 'panel_' + id;
     panel.innerHTML = `
       <div class="conversation" id="conv_${id}">
         <div class="empty-state" id="empty_${id}">
@@ -592,16 +723,13 @@ function ensureTabs() {
   // Consensus tab — always last, only once
   if (!document.getElementById('tab_consensus')) {
     const btn = document.createElement('button');
-    btn.className = 'tab';
-    btn.id = 'tab_consensus';
-    btn.setAttribute('data-svc', 'consensus');
+    btn.className = 'tab'; btn.id = 'tab_consensus'; btn.setAttribute('data-svc', 'consensus');
     btn.onclick = () => switchTab('consensus');
     btn.innerHTML = `<span class="tab-dot" id="tdot_consensus" style="background:var(--consensus);--dot-c:var(--consensus)"></span>Consensus`;
     tabBar.appendChild(btn);
 
     const panel = document.createElement('div');
-    panel.className = 'tab-panel';
-    panel.id = 'panel_consensus';
+    panel.className = 'tab-panel'; panel.id = 'panel_consensus';
     panel.innerHTML = `
       <div class="conversation" id="conv_consensus">
         <div class="empty-state" id="empty_consensus">
@@ -629,17 +757,14 @@ function switchTab(id) {
   });
 }
 
-// ── Markdown ──────────────────────────────────────────────────────────
+// ── Markdown / highlight ──────────────────────────────────────────────
 function renderMarkdown(text) {
   if (typeof marked === 'undefined')
     return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   return marked.parse(text);
 }
-
-function highlightBubble(bubble) {
-  bubble.querySelectorAll('pre code').forEach(b => {
-    if (typeof hljs !== 'undefined') hljs.highlightElement(b);
-  });
+function highlightBubble(el) {
+  el.querySelectorAll('pre code').forEach(b => { if (typeof hljs !== 'undefined') hljs.highlightElement(b); });
 }
 
 // ── SSE reader ────────────────────────────────────────────────────────
@@ -647,14 +772,11 @@ async function* sseReader(response, extract) {
   const reader = response.body.getReader();
   const dec = new TextDecoder();
   let buf = '', evtName = null;
-
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
     buf += dec.decode(value, { stream: true });
-    const lines = buf.split('\n');
-    buf = lines.pop() ?? '';
-
+    const lines = buf.split('\n'); buf = lines.pop() ?? '';
     for (const line of lines) {
       if (line.startsWith('event:')) { evtName = line.slice(6).trim(); }
       else if (line.startsWith('data:')) {
@@ -667,19 +789,16 @@ async function* sseReader(response, extract) {
   }
 }
 
-// ── API: Claude ───────────────────────────────────────────────────────
+// ── API generators ────────────────────────────────────────────────────
 async function* apiClaude(messages, cfg) {
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
-      'x-api-key': cfg.claude_key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
+      'x-api-key': cfg.claude_key, 'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true', 'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: cfg.claudeModel || 'claude-sonnet-4-6',
-      max_tokens: 8096, stream: true,
+      model: cfg.claudeModel || 'claude-sonnet-4-6', max_tokens: 8096, stream: true,
       messages: messages.map(m => ({ role: m.role, content: m.content })),
     }),
   });
@@ -687,7 +806,6 @@ async function* apiClaude(messages, cfg) {
   yield* sseReader(resp, (_, d) => d?.type === 'content_block_delta' && d?.delta?.type === 'text_delta' ? d.delta.text : null);
 }
 
-// ── API: Gemini ───────────────────────────────────────────────────────
 function geminiContents(messages) {
   const merged = [];
   for (const m of messages) {
@@ -698,7 +816,6 @@ function geminiContents(messages) {
   }
   return merged;
 }
-
 async function* apiGemini(messages, cfg) {
   const model = cfg.geminiModel || 'gemini-3.5-flash';
   const resp = await fetch(
@@ -709,7 +826,6 @@ async function* apiGemini(messages, cfg) {
   yield* sseReader(resp, (_, d) => d?.candidates?.[0]?.content?.parts?.[0]?.text ?? null);
 }
 
-// ── API: OpenAI ───────────────────────────────────────────────────────
 async function* apiOpenAI(messages, cfg) {
   const resp = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -723,19 +839,17 @@ async function* apiOpenAI(messages, cfg) {
   yield* sseReader(resp, (_, d) => d?.choices?.[0]?.delta?.content ?? null);
 }
 
-// ── Generator helper ──────────────────────────────────────────────────
 function makeGen(svcId, messages, cfg) {
   if (svcId === 'claude') return apiClaude(messages, cfg);
   if (svcId === 'gemini') return apiGemini(messages, cfg);
   return apiOpenAI(messages, cfg);
 }
 
-// ── Stream to one service (prepends Q&A pair, manages dot) ────────────
+// ── Stream to service tab ─────────────────────────────────────────────
 async function streamTo(svcId, userContent) {
   const cfg = loadCfg();
   convos[svcId].push({ role: 'user', content: userContent });
 
-  // Build Q&A pair and PREPEND (newest at top)
   const conv  = document.getElementById('conv_' + svcId);
   const empty = document.getElementById('empty_' + svcId);
   if (empty) empty.remove();
@@ -744,10 +858,7 @@ async function streamTo(svcId, userContent) {
   pair.className = 'qa-pair';
   const safe = userContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   pair.innerHTML = `
-    <div class="msg user">
-      <span class="msg-label">You</span>
-      <div class="msg-bubble">${safe}</div>
-    </div>
+    <div class="msg user"><span class="msg-label">You</span><div class="msg-bubble">${safe}</div></div>
     <div class="msg assistant">
       <span class="msg-label">${SVC[svcId].name}</span>
       <div class="msg-bubble" id="mbubble_${svcId}">
@@ -757,7 +868,6 @@ async function streamTo(svcId, userContent) {
   conv.prepend(pair);
   conv.scrollTop = 0;
 
-  // Tab dot spinner — stays on for full response duration
   const dot = document.getElementById('tdot_' + svcId);
   if (dot) dot.classList.add('loading');
 
@@ -766,30 +876,21 @@ async function streamTo(svcId, userContent) {
 
   try {
     const gen = makeGen(svcId, convos[svcId], cfg);
-    bubble.innerHTML = ''; // clear loading dots
-
+    bubble.innerHTML = '';
     for await (const chunk of gen) {
       full += chunk;
       bubble.innerHTML = renderMarkdown(full);
     }
-
     if (!full) bubble.textContent = '(no response)';
     else highlightBubble(bubble);
-
     convos[svcId].push({ role: 'assistant', content: full });
     return full;
-
   } catch (err) {
     bubble.innerHTML = `<span class="msg-error">Error: ${err.message}</span>`;
     convos[svcId].pop();
     return null;
-
   } finally {
-    if (dot) {
-      dot.classList.remove('loading');
-      dot.classList.add('done');
-      setTimeout(() => dot.classList.remove('done'), 350);
-    }
+    if (dot) { dot.classList.remove('loading'); dot.classList.add('done'); setTimeout(() => dot.classList.remove('done'), 350); }
   }
 }
 
@@ -810,12 +911,17 @@ async function sendAll() {
   document.getElementById('responses').style.display = '';
 
   ensureTabs();
-  initProgress(services);
+  ensureConsensusPill();
 
-  services.forEach(id => setProgress(id, 'running'));
-  setProgress('consensus', 'pending');
+  // Mark all service pills as running, disable selects
+  services.forEach(id => {
+    setSvcPillState(id, 'running');
+    const sel = document.querySelector(`#spill_${id} .s-pill-select`);
+    if (sel) sel.disabled = true;
+  });
+  setConsensusPillState('', '');
 
-  // step1Promise fires as soon as 2 models complete (runs in parallel with 3rd)
+  // step1Promise: fires as soon as 2 models finish (parallel with 3rd)
   let step1Started = false;
   let step1Promise = null;
 
@@ -823,51 +929,52 @@ async function sendAll() {
     const result = await streamTo(id, text);
     completionOrder.push(id);
     broadcastResults[id] = result;
-    setProgress(id, result !== null ? 'done' : 'error');
+    setSvcPillState(id, result !== null ? 'done' : 'error');
 
-    // For 3-service runs: start the silent step-1 synthesis the moment 2 succeed
+    // For 3-service runs: start silent step-1 as soon as 2 succeed
     if (services.length >= 3 && !step1Started) {
       const ok = completionOrder.filter(i => broadcastResults[i]);
       if (ok.length >= 2) {
         step1Started = true;
         const [f, s] = ok;
-        const p = `Here is an additional perspective on this question:\n\n---\n${broadcastResults[s]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.`;
         const msgs = [
           { role: 'user',      content: text },
           { role: 'assistant', content: broadcastResults[f] },
-          { role: 'user',      content: p },
+          { role: 'user',      content: `Here is an additional perspective on this question:\n\n---\n${broadcastResults[s]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.` },
         ];
-        setProgress('consensus', 'running', `${SVC[f].tabLabel} ↔ ${SVC[s].tabLabel}`);
+        setConsensusPillState('running', `${SVC[f].tabLabel} ↔ ${SVC[s].tabLabel}`);
         setConsensusDot(true);
-        // Capture result; never throw — fall back to first model's raw response
         step1Promise = getSilentText(f, msgs).catch(() => broadcastResults[f]);
       }
     }
   }));
 
-  // If step1 wasn't started yet (2-model case or all failed), mark consensus running now
   if (!step1Started) {
-    setProgress('consensus', 'running');
+    setConsensusPillState('running', '');
     setConsensusDot(true);
   }
 
   await runConsensus(step1Promise);
 
   setConsensusDot(false);
-  setProgress('consensus', 'done');
+  setConsensusPillState('done', '');
+
+  // Re-enable model selectors
+  services.forEach(id => {
+    const sel = document.querySelector(`#spill_${id} .s-pill-select`);
+    if (sel) sel.disabled = false;
+  });
 
   document.getElementById('sendBtn').disabled = false;
 }
 
 // ── Reset / New chat ──────────────────────────────────────────────────
 function resetApp() {
-  // Clear state
   Object.keys(convos).forEach(id => convos[id] = []);
   lastBroadcastPrompt = '';
-  broadcastResults    = {};
-  completionOrder     = [];
+  broadcastResults = {};
+  completionOrder  = [];
 
-  // Clear conversation panels
   document.querySelectorAll('.conversation').forEach(conv => {
     const svcId = conv.id.replace('conv_', '');
     const label = svcId === 'consensus'
@@ -880,11 +987,19 @@ function resetApp() {
   });
 
   // Reset tab dots
-  document.querySelectorAll('.tab-dot').forEach(d => {
-    d.classList.remove('loading', 'done');
+  document.querySelectorAll('.tab-dot').forEach(d => d.classList.remove('loading', 'done'));
+
+  // Reset service pill states and re-enable selects
+  Object.keys(SVC).forEach(id => {
+    setSvcPillState(id, '');
+    const sel = document.querySelector(`#spill_${id} .s-pill-select`);
+    if (sel) sel.disabled = false;
   });
 
-  hideProgress();
+  // Remove consensus pill
+  const cp = document.getElementById('cpill_consensus');
+  if (cp) cp.remove();
+
   document.getElementById('promptInput').focus();
 }
 
@@ -897,16 +1012,10 @@ function setConsensusStatus(msg) {
 function setConsensusDot(loading) {
   const dot = document.getElementById('tdot_consensus');
   if (!dot) return;
-  if (loading) {
-    dot.classList.add('loading');
-  } else {
-    dot.classList.remove('loading');
-    dot.classList.add('done');
-    setTimeout(() => dot.classList.remove('done'), 350);
-  }
+  if (loading) { dot.classList.add('loading'); }
+  else { dot.classList.remove('loading'); dot.classList.add('done'); setTimeout(() => dot.classList.remove('done'), 350); }
 }
 
-// Silent API call — no UI update, just returns text
 async function getSilentText(svcId, messages) {
   const cfg = loadCfg();
   let text = '';
@@ -914,7 +1023,6 @@ async function getSilentText(svcId, messages) {
   return text;
 }
 
-// Stream the final synthesis into the Consensus tab
 async function streamToConsensusTab(svcId, messages) {
   const cfg  = loadCfg();
   const conv = document.getElementById('conv_consensus');
@@ -925,50 +1033,40 @@ async function streamToConsensusTab(svcId, messages) {
   const pair = document.createElement('div');
   pair.className = 'qa-pair';
   pair.innerHTML = `
-    <div class="msg user">
-      <span class="msg-label">You</span>
-      <div class="msg-bubble">${safe}</div>
-    </div>
+    <div class="msg user"><span class="msg-label">You</span><div class="msg-bubble">${safe}</div></div>
     <div class="msg assistant">
       <span class="msg-label">Consensus</span>
       <div class="msg-bubble" id="consensus-bubble"></div>
     </div>`;
   conv.prepend(pair);
   conv.scrollTop = 0;
-  const bubble = document.getElementById('consensus-bubble');
 
+  const bubble = document.getElementById('consensus-bubble');
   let fullText = '';
   for await (const chunk of makeGen(svcId, messages, cfg)) {
     fullText += chunk;
     bubble.innerHTML = renderMarkdown(fullText);
     conv.scrollTop = 0;
   }
-
   if (!fullText) bubble.textContent = '(no response)';
   else highlightBubble(bubble);
   return fullText;
 }
 
-// Show a static result in Consensus tab (no streaming)
 function showConsensusStatic(text, isError = false) {
   const conv  = document.getElementById('conv_consensus');
   const empty = document.getElementById('empty_consensus');
   if (empty) empty.remove();
-
   const safe = lastBroadcastPrompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   const pair = document.createElement('div');
   pair.className = 'qa-pair';
   pair.innerHTML = `
-    <div class="msg user">
-      <span class="msg-label">You</span>
-      <div class="msg-bubble">${safe}</div>
-    </div>
+    <div class="msg user"><span class="msg-label">You</span><div class="msg-bubble">${safe}</div></div>
     <div class="msg assistant">
       <span class="msg-label">Consensus</span>
       <div class="msg-bubble">${isError ? `<span class="msg-error">${text}</span>` : renderMarkdown(text)}</div>
     </div>`;
-  conv.prepend(pair);
-  conv.scrollTop = 0;
+  conv.prepend(pair); conv.scrollTop = 0;
   if (!isError) highlightBubble(pair);
 }
 
@@ -980,7 +1078,6 @@ async function runConsensus(step1Promise = null) {
     showConsensusStatic('All models failed to respond — no consensus available.', true);
     return;
   }
-
   if (ordered.length === 1) {
     showConsensusStatic(broadcastResults[ordered[0]]);
     return;
@@ -988,40 +1085,31 @@ async function runConsensus(step1Promise = null) {
 
   const [first, second, third] = ordered;
 
-  const step1Prompt = `Here is an additional perspective on this question:\n\n---\n${broadcastResults[second]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.`;
-
   const step1Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
     { role: 'assistant', content: broadcastResults[first] },
-    { role: 'user',      content: step1Prompt },
+    { role: 'user',      content: `Here is an additional perspective on this question:\n\n---\n${broadcastResults[second]}\n---\n\nBased on everything you know, provide the most complete and accurate answer possible.` },
   ];
 
   if (!third) {
-    // ── 2-model: stream step 1 directly as final consensus ───────────
-    setConsensusStatus(`${SVC[first].name} synthesizing…`);
-    setProgress('consensus', 'running', `${SVC[first].tabLabel} + ${SVC[second].tabLabel}`);
-    try {
-      await streamToConsensusTab(first, step1Messages);
-    } catch {
-      showConsensusStatic(broadcastResults[first]);
-    }
+    setConsensusStatus(`Synthesizing…`);
+    setConsensusPillState('running', `${SVC[first].tabLabel} + ${SVC[second].tabLabel}`);
+    try { await streamToConsensusTab(first, step1Messages); }
+    catch { showConsensusStatic(broadcastResults[first]); }
     return;
   }
 
-  // ── 3-model: await already-running step1Promise (started in parallel) ─
-  setConsensusStatus(`${SVC[first].name} reviewing ${SVC[second].name}…`);
-  // (progress label was already set when step1 started — don't overwrite)
-
+  // 3-model: step1 already running in parallel — just await it
+  setConsensusStatus(`Reviewing perspectives…`);
   let synthesis = broadcastResults[first];
   try {
-    // step1Promise was fired when 2nd model finished; may already be resolved
     synthesis = step1Promise
       ? await step1Promise
       : await getSilentText(first, step1Messages);
   } catch { /* use fallback */ }
 
-  setConsensusStatus(`${SVC[third].name} producing final consensus…`);
-  setProgress('consensus', 'running', `${SVC[third].tabLabel} finalizing`);
+  setConsensusStatus(`Finalizing consensus…`);
+  setConsensusPillState('running', `${SVC[third].tabLabel} finalizing`);
 
   const step2Messages = [
     { role: 'user',      content: lastBroadcastPrompt },
@@ -1029,11 +1117,8 @@ async function runConsensus(step1Promise = null) {
     { role: 'user',      content: `Here is a well-researched draft answer to this question:\n\n---\n${synthesis}\n---\n\nUsing your own knowledge alongside this, provide the definitive best answer — complete, accurate, and well-organised.` },
   ];
 
-  try {
-    await streamToConsensusTab(third, step2Messages);
-  } catch {
-    showConsensusStatic(synthesis);
-  }
+  try { await streamToConsensusTab(third, step2Messages); }
+  catch { showConsensusStatic(synthesis); }
 }
 
 // ── Open in service ───────────────────────────────────────────────────
@@ -1067,7 +1152,9 @@ function closeConfig() { document.getElementById('configModal').classList.remove
 document.getElementById('configBtn').addEventListener('click', openConfig);
 document.getElementById('closeConfig').addEventListener('click', closeConfig);
 document.getElementById('cancelConfig').addEventListener('click', closeConfig);
-document.getElementById('configModal').addEventListener('click', e => { if (e.target === document.getElementById('configModal')) closeConfig(); });
+document.getElementById('configModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('configModal')) closeConfig();
+});
 
 document.getElementById('saveConfig').addEventListener('click', () => {
   const c = {
