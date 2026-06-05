@@ -129,13 +129,15 @@
     .send-btn {
       display: flex; align-items: center; gap: 5px;
       background: var(--text); color: var(--bg); border: none;
-      border-radius: var(--radius-sm); padding: 7px 12px;
+      border-radius: var(--radius-sm); padding: 7px 10px;
       font-family: inherit; font-size: 12px; font-weight: 700;
       cursor: pointer; transition: opacity .15s; white-space: nowrap; flex-shrink: 0;
     }
     .send-btn:hover { opacity: .82; }
     .send-btn:disabled { opacity: .35; cursor: not-allowed; }
     .send-btn kbd { font-family: inherit; font-size: 10px; opacity: .55; font-weight: 400; }
+    /* Hide label text on narrow screens — icon only */
+    @media (max-width: 520px) { .send-text { display: none; } }
 
     /* ── Response panel ─────────────────────────────────────────────── */
     .responses {
@@ -338,7 +340,7 @@
 <body>
 
 <header>
-  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-04 21:20</span></div>
+  <div class="logo">Poly<span class="logo-grad">Chat</span><span class="logo-ver">v2026-06-05 09:00</span></div>
   <div class="header-actions">
     <button class="icon-btn" id="resetBtn" title="New chat">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -367,11 +369,11 @@
     <div class="prompt-footer">
       <!-- Model chips — one per configured service -->
       <div class="model-chips" id="modelChips"></div>
-      <button class="send-btn" id="sendBtn" disabled>
+      <button class="send-btn" id="sendBtn" disabled title="Send to all (⌘↵)">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
         </svg>
-        Send to all <kbd>⌘↵</kbd>
+        <span class="send-text">Send to all <kbd>⌘↵</kbd></span>
       </button>
     </div>
   </div>
@@ -404,12 +406,12 @@
         <div class="field">
           <label class="field-label" for="claudeModel">Model</label>
           <select class="field-input" id="claudeModel">
-            <option value="claude-opus-4-8">Claude Opus 4.8 (recommended)</option>
-            <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
-            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
-            <option value="claude-opus-4-7">Claude Opus 4.7</option>
-            <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
-            <option value="claude-opus-4-1-20250805">Claude Opus 4.1</option>
+            <option value="claude-opus-4-8">Claude Opus 4.8 $$$$</option>
+            <option value="claude-sonnet-4-6">Claude Sonnet 4.6 $$$</option>
+            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 $$</option>
+            <option value="claude-opus-4-7">Claude Opus 4.7 $$$$</option>
+            <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5 $$$</option>
+            <option value="claude-opus-4-1-20250805">Claude Opus 4.1 $$$$</option>
           </select>
         </div>
       </div>
@@ -423,15 +425,15 @@
         <div class="field">
           <label class="field-label" for="geminiModel">Model</label>
           <select class="field-input" id="geminiModel">
-            <option value="gemini-3.5-flash">Gemini 3.5 Flash (recommended)</option>
-            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
-            <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
-            <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
-            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-            <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+            <option value="gemini-3.5-flash">Gemini 3.5 Flash $$</option>
+            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview $$$</option>
+            <option value="gemini-3-flash-preview">Gemini 3 Flash Preview $$</option>
+            <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite $</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro $$$</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash $</option>
+            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite $</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash $</option>
+            <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite $</option>
           </select>
         </div>
       </div>
@@ -445,11 +447,11 @@
         <div class="field">
           <label class="field-label" for="openaiModel">Model</label>
           <select class="field-input" id="openaiModel">
-            <option value="gpt-5.5">GPT-5.5 (recommended)</option>
-            <option value="gpt-5.4">GPT-5.4</option>
-            <option value="gpt-5.4-mini">GPT-5.4 mini</option>
-            <option value="gpt-4o">GPT-4o</option>
-            <option value="gpt-4o-mini">GPT-4o mini</option>
+            <option value="gpt-5.5">GPT-5.5 $$$</option>
+            <option value="gpt-5.4">GPT-5.4 $$$</option>
+            <option value="gpt-5.4-mini">GPT-5.4 mini $$</option>
+            <option value="gpt-4o">GPT-4o $$$</option>
+            <option value="gpt-4o-mini">GPT-4o mini $</option>
           </select>
         </div>
       </div>
@@ -480,30 +482,30 @@ const SVC = {
 
 const MODEL_OPTIONS = {
   claude: [
-    { value: 'claude-opus-4-8',           label: 'Opus 4.8'   },
-    { value: 'claude-sonnet-4-6',         label: 'Sonnet 4.6' },
-    { value: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5'  },
-    { value: 'claude-opus-4-7',           label: 'Opus 4.7'   },
-    { value: 'claude-sonnet-4-5-20250929',label: 'Sonnet 4.5' },
-    { value: 'claude-opus-4-1-20250805',  label: 'Opus 4.1'   },
+    { value: 'claude-opus-4-8',           label: 'Opus 4.8',   price: '$$$$' }, // ~$15/MTok
+    { value: 'claude-sonnet-4-6',         label: 'Sonnet 4.6', price: '$$$'  }, // ~$3/MTok
+    { value: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5',  price: '$$'   }, // ~$0.80/MTok
+    { value: 'claude-opus-4-7',           label: 'Opus 4.7',   price: '$$$$' }, // ~$15/MTok
+    { value: 'claude-sonnet-4-5-20250929',label: 'Sonnet 4.5', price: '$$$'  }, // ~$3/MTok
+    { value: 'claude-opus-4-1-20250805',  label: 'Opus 4.1',   price: '$$$$' }, // ~$15/MTok
   ],
   gemini: [
-    { value: 'gemini-3.5-flash',          label: '3.5 Flash'  },
-    { value: 'gemini-3.1-pro-preview',    label: '3.1 Pro'    },
-    { value: 'gemini-3-flash-preview',    label: '3 Flash'    },
-    { value: 'gemini-3.1-flash-lite',     label: '3.1 Lite'   },
-    { value: 'gemini-2.5-pro',            label: '2.5 Pro'    },
-    { value: 'gemini-2.5-flash',          label: '2.5 Flash'  },
-    { value: 'gemini-2.5-flash-lite',     label: '2.5 Lite'   },
-    { value: 'gemini-2.0-flash',          label: '2.0 Flash'  },
-    { value: 'gemini-2.0-flash-lite',     label: '2.0 Lite'   },
+    { value: 'gemini-3.5-flash',          label: '3.5 Flash',  price: '$$'   }, // $1.50/MTok
+    { value: 'gemini-3.1-pro-preview',    label: '3.1 Pro',    price: '$$$'  }, // $2–4/MTok
+    { value: 'gemini-3-flash-preview',    label: '3 Flash',    price: '$$'   }, // ~$0.50/MTok
+    { value: 'gemini-3.1-flash-lite',     label: '3.1 Lite',   price: '$'    }, // $0.25/MTok
+    { value: 'gemini-2.5-pro',            label: '2.5 Pro',    price: '$$$'  }, // $1.25–2.50/MTok
+    { value: 'gemini-2.5-flash',          label: '2.5 Flash',  price: '$'    }, // $0.30/MTok
+    { value: 'gemini-2.5-flash-lite',     label: '2.5 Lite',   price: '$'    }, // $0.10/MTok
+    { value: 'gemini-2.0-flash',          label: '2.0 Flash',  price: '$'    }, // $0.10/MTok
+    { value: 'gemini-2.0-flash-lite',     label: '2.0 Lite',   price: '$'    }, // $0.075/MTok
   ],
   openai: [
-    { value: 'gpt-5.5',     label: 'GPT-5.5'  },
-    { value: 'gpt-5.4',     label: 'GPT-5.4'  },
-    { value: 'gpt-5.4-mini',label: '5.4 mini' },
-    { value: 'gpt-4o',      label: 'GPT-4o'   },
-    { value: 'gpt-4o-mini', label: '4o mini'  },
+    { value: 'gpt-5.5',     label: 'GPT-5.5',  price: '$$$'  }, // $5/MTok
+    { value: 'gpt-5.4',     label: 'GPT-5.4',  price: '$$$'  }, // $2.50/MTok
+    { value: 'gpt-5.4-mini',label: '5.4 mini', price: '$$'   }, // $0.75/MTok
+    { value: 'gpt-4o',      label: 'GPT-4o',   price: '$$$'  }, // $2.50/MTok
+    { value: 'gpt-4o-mini', label: '4o mini',  price: '$'    }, // $0.15/MTok
   ],
 };
 
@@ -555,7 +557,7 @@ function buildModelChips() {
   active.forEach(id => {
     const curModel = cfg[id + 'Model'] || MODEL_OPTIONS[id][0].value;
     const opts = MODEL_OPTIONS[id].map(o =>
-      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}</option>`
+      `<option value="${o.value}"${o.value === curModel ? ' selected' : ''}>${o.label}  ${o.price}</option>`
     ).join('');
 
     const chip = document.createElement('label');
@@ -564,7 +566,7 @@ function buildModelChips() {
     chip.style.setProperty('--c', SVC[id].color);
     chip.innerHTML = `
       <span class="m-chip-dot"></span>
-      <span class="m-chip-label" id="mclabel_${id}">${modelShort(id, curModel)}</span>
+      <span class="m-chip-label" id="mclabel_${id}">${SVC[id].tabLabel} · ${modelShort(id, curModel)}</span>
       <span class="m-chip-chev">▾</span>
       <select class="m-chip-select" onchange="onChipModelChange('${id}', this)">${opts}</select>`;
     row.appendChild(chip);
@@ -576,7 +578,7 @@ function onChipModelChange(svcId, sel) {
   cfg[svcId + 'Model'] = sel.value;
   saveCfg(cfg);
   const el = document.getElementById('mclabel_' + svcId);
-  if (el) el.textContent = modelShort(svcId, sel.value);
+  if (el) el.textContent = SVC[svcId].tabLabel + ' · ' + modelShort(svcId, sel.value);
   // Sync config modal
   const ms = document.getElementById(svcId + 'Model');
   if (ms) ms.value = sel.value;
